@@ -22,7 +22,11 @@ def main():
     elif args[1].lower() == 'add':
         if len(args) >= 3:
             add = Add(cwd)
-            add.add_traked_file(args[2])
+            if args[2] == '-l' or args[2] == '--list':
+                add.traked_files_list()
+            else:
+                add.add_traked_file(args[2])
+
         else:
             print(Fore.RED + 'Not enough arguments! Use "vcs add --help"')
 
