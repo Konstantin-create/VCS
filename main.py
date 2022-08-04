@@ -22,6 +22,7 @@ def main():
     elif args[1].lower() == 'add':
         if len(args) >= 3:
             add = Add(cwd)
+            add.add_traked_file(args[2])
         else:
             print(Fore.RED + 'Not enough arguments! Use "vcs add --help"')
 

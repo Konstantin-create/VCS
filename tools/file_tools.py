@@ -5,5 +5,11 @@ def get_all_files(working_dir: str) -> list:
     output = []
     for root, dirs, files in os.walk(working_dir):
         for file in files:
-            output.append(f'{root.replace(working_dir)}/{file}')
+            output.append(f'{root.replace(working_dir, "")}/{file}')
     return output
+
+def is_exists(working_dir: str, file_name: str) -> bool:
+    for element in get_all_files(working_dir):
+        if file_name in element:
+            return True
+    return False
