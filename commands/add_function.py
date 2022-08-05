@@ -43,7 +43,7 @@ class Add:
         ignore = get_ignore(self.run_path)
         if ignore:
             for file in current_traking:
-                if not is_ignored(self.run_path, ignore, file):
+                if not is_ignored(self.run_path, ignore, file) and is_exists(self.run_path, file):
                     not_ignored_files.append(file)
             print(Fore.GREEN + f'\nFound {len(ignore)} ignores')
         else:

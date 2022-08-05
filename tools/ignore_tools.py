@@ -1,14 +1,6 @@
 from tools.file_tools import *
 
 
-def is_exists(working_dir: str, file_name: str) -> bool:
-    """Function to check is file exists in working_dir"""
-    for element in get_all_files(working_dir):
-        if file_name in element:
-            return True
-    return False
-
-
 def is_ignored(working_dir: str, ignore_list: list, file_name: str) -> bool:
     """Function is file ignored"""
     for ignore in ignore_list:
