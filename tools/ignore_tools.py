@@ -1,5 +1,6 @@
 from tools.file_tools import *
 
+
 def is_exists(working_dir: str, file_name: str) -> bool:
     """Function to check is file exists in working_dir"""
     for element in get_all_files(working_dir):
@@ -25,6 +26,5 @@ def get_ignore(working_dir: str) -> list | None:
         for line in ignore_file_lines:
             if line != '' and not line[0] == '#':
                 ignore.append(line.strip())
-                return ignore
+        return ignore
     return None
-

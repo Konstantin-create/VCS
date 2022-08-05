@@ -3,12 +3,12 @@ import sys
 from commands import *
 from colorama import init, Fore
 
-
 # Colorama init
 init(autoreset=True)
 
 # Get run args
 args = sys.argv
+
 
 # Functions
 def main():
@@ -23,9 +23,9 @@ def main():
         if len(args) >= 3:
             add = Add(cwd)
             if args[2] == '-l' or args[2] == '--list':
-                add.traked_files_list()
+                add.tracked_files_list()
             else:
-                add.add_traked_file(args[2])
+                add.add_tracked_file(args[2])
 
         else:
             print(Fore.RED + 'Not enough arguments! Use "vcs add --help"')
@@ -33,5 +33,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
