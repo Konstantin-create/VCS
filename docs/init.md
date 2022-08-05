@@ -5,7 +5,7 @@ Base VCS init. Default branch name is `master`
 ~ python vcs.py init
 /home/hacknet/Kostua/Python/VCS/.vcs/refs/heads/master
 
-+ VCS initialized successfully
+VCS initialized successfully
 ```
 \
 VCS init with custom branch name
@@ -13,7 +13,7 @@ VCS init with custom branch name
 ~ python vcs.py init -b test
 /home/hacknet/Kostua/Python/VCS/.vcs/refs/heads/test
 
-+ VCS initialized successfully
+VCS initialized successfully
 ```
 
 ___
