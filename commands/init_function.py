@@ -26,10 +26,18 @@ class Init:
             else:
                 shutil.rmtree(self.run_path + '/.vcs')
 
+        self.create_folders()
+        self.create_config(str(self.branch_name))
+
+    def create_folders(self):
+        """Function to create base folders for .vcs init"""
         os.mkdir(self.run_path + '/.vcs')
+        os.mkdir(self.run_path + '/.vcs/objects')
+        os.mkdir(self.run_path + '/.vcs/objects/' + self.branch_name)
         os.mkdir(self.run_path + '/.vcs/refs')
         os.mkdir(self.run_path + '/.vcs/refs/heads')
-        self.create_config(str(self.branch_name))
+
+
 
     def create_config(self, main_branch: str):
         merge_path = self.run_path + '/.vcs/refs/heads/' + main_branch
