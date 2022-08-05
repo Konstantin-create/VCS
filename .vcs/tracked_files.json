@@ -1,1 +1,1 @@
-["/LICENSE", "/README.md", "/main.py", "/.ignore", "/commands/__init__.py", "/commands/init_function.py", "/commands/add_function.py", "/tools/file_tools.py", "/tools/__init__.py", "/tools/ignore_tools.py"]
+["/LICENSE", "/README.md", "/.ignore", "/requirements.txt", "/vcs.py", "/commands/__init__.py", "/commands/init_function.py", "/commands/add_function.py", "/tools/file_tools.py", "/tools/__init__.py", "/tools/ignore_tools.py", "/docs/img/init_function.png"]

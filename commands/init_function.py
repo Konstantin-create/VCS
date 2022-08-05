@@ -12,6 +12,7 @@ class Init:
 
     def __init__(self, run_path, base_branch='master'):
         self.run_path = run_path
+        self.branch_name = base_branch
         self.create_vcs_dir()
         print(Fore.GREEN + '\nVCS initialized successfully')
 
@@ -28,7 +29,7 @@ class Init:
         os.mkdir(self.run_path + '/.vcs')
         os.mkdir(self.run_path + '/.vcs/refs')
         os.mkdir(self.run_path + '/.vcs/refs/heads')
-        self.create_config(str(base_branch))
+        self.create_config(str(self.branch_name))
 
     def create_config(self, main_branch: str):
         merge_path = self.run_path + '/.vcs/refs/heads/' + main_branch
