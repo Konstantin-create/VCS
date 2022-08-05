@@ -40,9 +40,10 @@ class Init:
 
 
     def create_config(self, main_branch: str):
-        merge_path = self.run_path + '/.vcs/refs/heads/' + main_branch
-        print(merge_path)
-        os.mkdir(merge_path)
+        merge_path = self.run_path + '/.vcs/refs/heads/' + main_branch + '.txt'
+        with open(merge_path, 'w') as file:
+            file.write('')
+        print(Fore.YELLOW + f'Set main branch as {self.branch_name}')
         config_data = {main_branch: {'merge': merge_path}}
         with open(self.run_path + '/.vcs/config.json', 'w') as file:
             json.dump(config_data, file, indent=4)

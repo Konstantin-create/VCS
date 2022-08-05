@@ -29,6 +29,9 @@ def main():
 
         else:
             print(Fore.RED + 'Not enough arguments! Use "vcs add --help"')
+    elif args[1].lower() == 'commit':
+        commit = Commit(cwd)
+        commit.commit('Init commit')
 
 
 if __name__ == '__main__':
