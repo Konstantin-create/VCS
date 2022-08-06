@@ -10,7 +10,7 @@ init(autoreset=True)
 class Init:
     """Class to init vcs working dir"""
 
-    def __init__(self, run_path, base_branch='master'):
+    def __init__(self, run_path: str, base_branch: str = 'master'):
         self.run_path = run_path
         self.branch_name = base_branch
         self.create_vcs_dir()
@@ -29,7 +29,7 @@ class Init:
         self.create_folders()
         self.create_config(str(self.branch_name))
 
-    def create_folders(self):
+    def create_folders(self) -> None:
         """Function to create base folders for .vcs init"""
         os.mkdir(self.run_path + '/.vcs')
         os.mkdir(self.run_path + '/.vcs/commits')
@@ -38,7 +38,7 @@ class Init:
         os.mkdir(self.run_path + '/.vcs/refs')
         os.mkdir(self.run_path + '/.vcs/refs/heads')
 
-    def create_config(self, main_branch: str):
+    def create_config(self, main_branch: str) -> None:
         merge_path = self.run_path + '/.vcs/refs/heads/' + main_branch + '.txt'
         with open(merge_path, 'w') as file:
             file.write('')

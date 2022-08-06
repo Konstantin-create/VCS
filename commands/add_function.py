@@ -12,7 +12,7 @@ class Add:
     __slots__ = ('run_path', 'tracked_files_path')
     """Class to add file to tracked files list"""
 
-    def __init__(self, run_path):
+    def __init__(self, run_path) -> None:
         self.run_path = run_path
         self.tracked_files_path = self.run_path + '/.vcs/tracked_files.json'
 
@@ -59,7 +59,7 @@ class Add:
         """Function to check is .vcs exists"""
         return os.path.exists(self.run_path + '/.vcs')
 
-    def tracked_files_list(self):
+    def tracked_files_list(self) -> None:
         """Function to print list of current tracked files"""
         if not self.is_tracked_files_exists():
             print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
