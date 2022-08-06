@@ -8,7 +8,7 @@ Functions:
 
 
 # Imports
-from tools import is_vcs_initialized
+from tools import is_vcs_initialized, init_help, add_help, commit_help
 from commands import *
 from colorama import init, Fore
 
@@ -26,6 +26,8 @@ def main():
     if args[1].lower() == 'init':
         if len(args) >= 3 and args[2].lower() == '-b':
             init = Init(cwd, base_branch=args[3])
+        elif len(args) >= 3 and (args[2].lower() == '-h' or args[2].lower() == '--help'):
+            init_help()
         else:
             init = Init(cwd)
     else:
@@ -37,6 +39,8 @@ def main():
                 add = Add(cwd)
                 if args[2] == '-l' or args[2] == '--list':
                     add.tracked_files_list()
+                elif args[2] == '-h' or args[2] == '--help':
+                    pass  # Help block
                 else:
                     add.add_tracked_file(args[2])
 
@@ -47,8 +51,12 @@ def main():
                 if args[2].lower() == '-t':
                     commit = Commit(cwd, args[3])
                     commit.commit()
+                elif args[2] == '-h' or args[2] == '--help':
+                    pass  # Help block
                 else:
                     print(Fore.RED + f'Flag {args[3]} not found try vcs commit --help')
+            else:
+                print(Fore.RED + 'Not enough arguments! Use "vcs commit --help"')
 
 
 if __name__ == '__main__':
