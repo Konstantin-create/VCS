@@ -1,3 +1,13 @@
+"""
+File of init command.
+Functions:
+    - Create .vcs/ tree in working dir
+    - Create configs
+        - Set up current branch name
+        - Create list of branch names
+"""
+
+# Imports
 import os
 import json
 import shutil
@@ -8,7 +18,7 @@ init(autoreset=True)
 
 
 class Init:
-    """Class to init vcs working dir"""
+    """Class to init vcs working tree"""
 
     def __init__(self, run_path: str, base_branch: str = 'master'):
         self.run_path = run_path
@@ -30,19 +40,19 @@ class Init:
         self.create_config(str(self.branch_name))
 
     def create_folders(self) -> None:
-        """Function to create base folders for .vcs init"""
+        """Function to create base folders for .vcs init. Create .vcs/ working tree"""
         os.mkdir(self.run_path + '/.vcs')
         os.mkdir(self.run_path + '/.vcs/commits')
         os.mkdir(self.run_path + '/.vcs/commits/' + self.branch_name)
         os.mkdir(self.run_path + '/.vcs/objects')
-        os.mkdir(self.run_path + '/.vcs/refs')
-        os.mkdir(self.run_path + '/.vcs/refs/heads')
 
     def create_config(self, main_branch: str) -> None:
-        merge_path = self.run_path + '/.vcs/refs/heads/' + main_branch + '.txt'
-        with open(merge_path, 'w') as file:
-            file.write('')
+        """Function to create config files in root of .vcs/.
+            Where im going to save current branch and list of branch names"""
         print(Fore.YELLOW + f'Set main branch as {self.branch_name}')
-        config_data = {main_branch: {'merge': merge_path}}
+        config_data = {main_branch: self.branch_name}
         with open(self.run_path + '/.vcs/config.json', 'w') as file:
             json.dump(config_data, file, indent=4)
+
+        with open(f'{self.run_path}/.vcs/CURRENT_BRANCH', 'w') as file:
+            file.write(self.branch_name)

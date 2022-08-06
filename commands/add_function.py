@@ -1,3 +1,14 @@
+"""
+File of add command
+Functions:
+    - Create tracked files list
+    - Append items in tracked files list
+    - Remove items in tracked files list
+    - Print tracked files list
+"""
+
+
+# Imports
 import os
 import sys
 import json
@@ -10,7 +21,7 @@ init(autoreset=True)
 
 class Add:
     __slots__ = ('run_path', 'tracked_files_path')
-    """Class to add file to tracked files list"""
+    """Class to manage tracked files list"""
 
     def __init__(self, run_path) -> None:
         self.run_path = run_path
@@ -43,14 +54,16 @@ class Add:
         ignore = get_ignore(self.run_path)
         if ignore:
             for file in current_tracking:
-                if not is_ignored(self.run_path, ignore, file) and is_exists(self.run_path, file):
-                    not_ignored_files.append({file: generate_hash(file.encode('utf-8'))})
+                if not is_ignored(ignore, file) and is_exists(self.run_path, file):
+                    not_ignored_files.append({file: generate_hash(file.encode())})
             print(Fore.GREEN + f'\nFound {len(ignore)} ignores')
         else:
             print(Fore.YELLOW + f'\nNo ignores found!')
+            for file in current_tracking:
+                not_ignored_files.append({file: generate_hash(file.encode())})
 
         with open(self.tracked_files_path, 'w') as file:
-            json.dump(not_ignored_files, file)
+            json.dump(not_ignored_files, file, indent=4)
 
         print(f'{len(not_ignored_files)} were added to tracked list')
         print(Fore.GREEN + 'Files were successfully added to tracked list')

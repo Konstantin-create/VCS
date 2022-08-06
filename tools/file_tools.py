@@ -1,3 +1,13 @@
+"""
+Tools to work with file system
+Functions list:
+    - Get all files from working directory
+    - Check is file exists in working directory
+    - Get current branch name
+    - Check is .vcs directory exists
+"""
+
+# Imports
 import os
 
 
@@ -18,6 +28,11 @@ def is_exists(working_dir: str, file_name: str) -> bool:
     return False
 
 
-def is_vcs_initialized(working_dir: str) -> bool:
-    return os.path.exists(working_dir + '/.vcs/')
+def get_branch_name(working_dir: str) -> str:
+    """Function to get current branch name"""
+    return open(f'{working_dir}/.vcs/CURRENT_BRANCH').read()
 
+
+def is_vcs_initialized(working_dir: str) -> bool:
+    """Function to check is .vcs dir exists"""
+    return os.path.exists(working_dir + '/.vcs/')

@@ -1,5 +1,13 @@
-import os
-import sys
+"""
+Program init function
+Functions:
+    - Get command
+    - Parse command
+    - Call class/function from commands/ dir
+"""
+
+
+# Imports
 from tools import is_vcs_initialized
 from commands import *
 from colorama import init, Fore
@@ -35,8 +43,12 @@ def main():
             else:
                 print(Fore.RED + 'Not enough arguments! Use "vcs add --help"')
         elif args[1].lower() == 'commit':
-            commit = Commit(cwd)
-            commit.commit('Init commit')
+            if len(args) >= 4:
+                if args[2].lower() == '-t':
+                    commit = Commit(cwd, args[3])
+                    commit.commit()
+                else:
+                    print(Fore.RED + f'Flag {args[3]} not found try vcs commit --help')
 
 
 if __name__ == '__main__':

@@ -27,6 +27,7 @@ ___
 - All commands list
     - [Init](/docs/init.md)
     - [Add](/docs/add.md)
+    - [Commit](/docs/commit.md)
 
 ___
 
