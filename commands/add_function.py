@@ -2,7 +2,7 @@ import os
 import sys
 import json
 from colorama import init, Fore
-from tools import get_all_files, is_exists, is_ignored, get_ignore
+from tools import get_all_files, is_exists, is_ignored, get_ignore, generate_hash
 
 # Colorama init
 init(autoreset=True)
@@ -22,32 +22,32 @@ class Add:
             print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
             return
 
-        current_traking = []
+        current_tracking = []
         if os.path.exists(self.tracked_files_path):
             with open(self.tracked_files_path, encoding='utf-8') as file:
                 file_data = file.read()
                 if len(file_data):
-                    current_traking = json.load(open(self.tracked_files_path))
+                    current_tracking = json.load(open(self.tracked_files_path))
 
         if not (file_name == '-A' or file_name == '.'):
             if is_exists(self.run_path, file_name):
-                if not (file_name in current_traking):
-                    current_traking.append(file_name)
+                if not (file_name in current_tracking):
+                    current_tracking.append(file_name)
             else:
                 print(Fore.RED + f'No such file in this folder(self.run_path)')
                 sys.exit()
         else:
-            current_traking = get_all_files(self.run_path)
+            current_tracking = get_all_files(self.run_path)
 
         not_ignored_files = []
         ignore = get_ignore(self.run_path)
         if ignore:
-            for file in current_traking:
+            for file in current_tracking:
                 if not is_ignored(self.run_path, ignore, file) and is_exists(self.run_path, file):
-                    not_ignored_files.append(file)
+                    not_ignored_files.append({file: generate_hash(file.encode('utf-8'))})
             print(Fore.GREEN + f'\nFound {len(ignore)} ignores')
         else:
-            print(Fore.YELLOW + f'\nNo ignores foud!')
+            print(Fore.YELLOW + f'\nNo ignores found!')
 
         with open(self.tracked_files_path, 'w') as file:
             json.dump(not_ignored_files, file)
@@ -68,10 +68,10 @@ class Add:
         if os.path.exists(self.tracked_files_path):
             with open(self.tracked_files_path, 'r', encoding='utf-8') as file:
                 if len(file.read()):
-                    current_traking = json.load(open(self.tracked_files_path))
-            print('Traking files:')
-            for file in current_traking:
+                    current_tracking = json.load(open(self.tracked_files_path))
+            print('Tracking files:')
+            for file in current_tracking:
                 print(f'    {file}')
         else:
-            print(Fore.YELLOW + 'No traking files. Use "vcs add <file_name | -A | .>"')
+            print(Fore.YELLOW + 'No tracking files. Use "vcs add <file_name | -A | .>"')
             return

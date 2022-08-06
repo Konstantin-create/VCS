@@ -17,3 +17,7 @@ def is_exists(working_dir: str, file_name: str) -> bool:
             return True
     return False
 
+
+def is_vcs_initialized(working_dir: str) -> bool:
+    return os.path.exists(working_dir + '/.vcs/')
+
