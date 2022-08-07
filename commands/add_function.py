@@ -19,35 +19,41 @@ init(autoreset=True)
 
 
 class Add:
-    __slots__ = ('run_path', 'tracked_files_path')
+    __slots__ = ('run_path', 'tracked_files_path', 'verbose')
     """Class to manage tracked files list"""
 
     def __init__(self, run_path) -> None:
         self.run_path = run_path
         self.tracked_files_path = self.run_path + '/.vcs/tracked_files.json'
+        self.verbose = False
 
-    def add_tracked_file(self, file_name: str) -> None:
+    def add_tracked_file(self, file_name: str, verbose: bool) -> None:
         """Function to add file to tracked list"""
         if not is_vcs_initialized(self.run_path):
             print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
             return
+
+        self.verbose = verbose
 
         current_tracking = []
         if os.path.exists(self.tracked_files_path):
             with open(self.tracked_files_path, encoding='utf-8') as file:
                 file_data = file.read()
                 if len(file_data):
-                    current_tracking = json.load(open(self.tracked_files_path))
+                    for file in json.load(open(self.tracked_files_path)):
+                        current_tracking.append(list(file.keys())[0])
 
         if not (file_name == '-A' or file_name == '.'):
             if is_exists(self.run_path, file_name):
                 if not (file_name in current_tracking):
                     current_tracking.append(file_name)
             else:
-                print(Fore.RED + f'No such file in this folder(self.run_path)')
+                print(Fore.RED + f'No such file in this folder({self.run_path}/{file_name})')
                 sys.exit()
         else:
             current_tracking = get_all_files(self.run_path)
+
+        print(current_tracking)
 
         not_ignored_files = []
         ignore = get_ignore(self.run_path)
@@ -63,7 +69,12 @@ class Add:
 
         with open(self.tracked_files_path, 'w') as file:
             json.dump(not_ignored_files, file, indent=4)
-
+        
+        if self.verbose:
+            pretty_added_files = ''
+            for file in not_ignored_files:
+                pretty_added_files += f'    {list(file.keys())[0]} - {file[list(file.keys())[0]]}\n'
+            print(f'Added files:\n{pretty_added_files}')
         print(f'{len(not_ignored_files)} were added to tracked list')
         print(Fore.GREEN + 'Files were successfully added to tracked list')
 

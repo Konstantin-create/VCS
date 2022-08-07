@@ -21,6 +21,7 @@ vcs add <file_name> | . | -A
 vcs add
     -l - Print all tracked files list
     -c | --clean - Clear tracked files list
+    -v | --verbose - Be verbose
     -h | --help - This help
 """
 
