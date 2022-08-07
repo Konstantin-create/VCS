@@ -8,6 +8,8 @@ Functions:
 """
 
 # Imports
+from __future__ import annotations
+
 import os
 import sys
 import json
@@ -15,7 +17,7 @@ import shutil
 from datetime import datetime
 from colorama import init, Fore
 from tools import generate_hash, pretty_hash
-from tools import get_branch_name
+from tools import get_branch_name, is_vcs_initialized
 from tools import encode_file
 
 # Colorama init
@@ -39,7 +41,7 @@ class Commit:
             return
         self.child_commit()
 
-    def initial_commit(self):
+    def initial_commit(self, hard_commit=False):
         """Initial commit function"""
         created_objects = self.get_changes()
         if not len(created_objects):
@@ -47,8 +49,10 @@ class Commit:
         commit_info = self.create_commit_info(created_objects)
         commit_hash = generate_hash(str(commit_info).encode())
         self.create_commit_dir(commit_hash, commit_info)
-
-        print(f'[{self.branch_name} {pretty_hash(commit_hash)}] {self.message}')
+        if hard_commit:
+            print(f'[{self.branch_name} {Fore.RED + + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+        else:
+            print(f'[{self.branch_name} {Fore.GREEN + + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
         print(f' {len(created_objects)} have been objects created')
 
     def child_commit(self):
@@ -59,18 +63,22 @@ class Commit:
         commit_info = self.create_commit_info(created_objects)
         commit_hash = generate_hash(str(commit_info).encode())
 
-        print(f'[{self.branch_name} {pretty_hash(commit_hash)}] {self.message}')
+        print(f'[{self.branch_name} {Fore.YELLOW + + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
         print(f' {len(created_objects)} have been objects created')
 
     def hard_commit(self):
         """Hard commit function(remove previous changes)"""
-        if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}'):
-            shutil.rmtree(f'{self.vcs_path}/commits/{self.branch_name}')
-        os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}')
-        self.initial_commit()
+        if is_vcs_initialized(self.working_dir):
+            if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}'):
+                shutil.rmtree(f'{self.vcs_path}/commits/{self.branch_name}')
+            if os.path.exists(f'{self.vcs_path}/objects/'):
+                shutil.rmtree(f'{self.vcs_path}/objects/')
+            os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}')
+            os.mkdir(f'{self.vcs_path}/objects')
+            self.initial_commit(hard_commit=True)
 
     # Global functions block
-    ## Get block
+    # Get block
     def get_tracked_files(self) -> list:
         """Function to get list of tracked files"""
         if not os.path.exists(self.vcs_path + '/tracked_files.json'):
@@ -83,7 +91,6 @@ class Commit:
         if not os.path.exists(self.vcs_path + '/objects'):
             print(Fore.RED + '.vcs/objects directory not found. Try "vcs init"')
             sys.exit()
-
 
         created_objects = []
         tracked_files = self.get_tracked_files()
@@ -105,7 +112,7 @@ class Commit:
             return open(self.vcs_path + '/LAST_COMMIT').read()
         return None
 
-    ## Create block
+    # Create block
     def create_commit_dir(self, commit_hash, commit_info):
         """Create commit dir and commit_info file"""
         if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}'):

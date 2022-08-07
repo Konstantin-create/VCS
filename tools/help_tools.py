@@ -11,6 +11,7 @@ Functions:
 init_text = """
 vcs init
     -b "<branch name>" - Create first branch with custom name
+    -q | --quiet - Quiet mode. Only errors and warning
     -h | --help- This help
 """
 
@@ -19,12 +20,14 @@ vcs add <file_name> | . | -A
     . = -A - Add all files in current directory to tracked files list
 vcs add
     -l - Print all tracked files list
+    -c | --clean - Clear tracked files list
+    -v | --verbose - Be verbose
     -h | --help - This help
 """
 
 commit_text = """
 vcs commit -t "<Your commit text>" - Create commit with text
-vcs commit -t "<Your commit text>" - Create commit, and remove all previous commits
+vcs commit -t "<Your commit text>" --hard - Create commit, and remove all previous commits
 vcs commit -h | --help - This help
 """
 
