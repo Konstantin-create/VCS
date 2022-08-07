@@ -82,9 +82,9 @@ class Add:
             with open(self.tracked_files_path, 'r', encoding='utf-8') as file:
                 if len(file.read()):
                     current_tracking = json.load(open(self.tracked_files_path))
-            print('Tracking files:')
+            print('Tracked files:')
             for file in current_tracking:
-                print(f'    {file}')
+                print(f'    {list(file.keys())[0]}')
         else:
             print(Fore.YELLOW + 'No tracking files. Use "vcs add <file_name | -A | .>"')
             return

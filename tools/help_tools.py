@@ -11,6 +11,7 @@ Functions:
 init_text = """
 vcs init
     -b "<branch name>" - Create first branch with custom name
+    -h | --help- This help
 """
 
 add_text = """
@@ -18,11 +19,15 @@ vcs add <file_name> | . | -A
     . = -A - Add all files in current directory to tracked files list
 vcs add
     -l - Print all tracked files list
+    -h | --help - This help
 """
 
 commit_text = """
-vcs commit -t "<You'r commit text>" - Create commit with text
+vcs commit -t "<Your commit text>" - Create commit with text
+vcs commit -t "<Your commit text>" - Create commit, and remove all previous commits
+vcs commit -h | --help - This help
 """
+
 
 # Print help functions
 def init_help():

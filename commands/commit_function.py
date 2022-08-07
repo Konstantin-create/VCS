@@ -11,6 +11,7 @@ Functions:
 import os
 import sys
 import json
+import shutil
 from datetime import datetime
 from colorama import init, Fore
 from tools import generate_hash, pretty_hash
@@ -58,6 +59,16 @@ class Commit:
         commit_info = self.create_commit_info(created_objects)
         commit_hash = generate_hash(str(commit_info).encode())
 
+        print(f'[{self.branch_name} {pretty_hash(commit_hash)}] {self.message}')
+        print(f' {len(created_objects)} have been objects created')
+
+    def hard_commit(self):
+        """Hard commit function(remove previous changes)"""
+        if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}'):
+            shutil.rmtree(f'{self.vcs_path}/commits/{self.branch_name}')
+        os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}')
+        self.initial_commit()
+
     # Global functions block
     ## Get block
     def get_tracked_files(self) -> list:
@@ -97,7 +108,7 @@ class Commit:
     ## Create block
     def create_commit_dir(self, commit_hash, commit_info):
         """Create commit dir and commit_info file"""
-        if os.path.exists(f'{self.vcs_path}/commits/{commit_hash}'):
+        if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}'):
             print(Fore.RED + 'Repo is already up to date')
             sys.exit()
         os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}')
