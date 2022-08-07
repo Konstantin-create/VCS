@@ -7,13 +7,12 @@ Functions:
     - Print tracked files list
 """
 
-
 # Imports
 import os
 import sys
 import json
 from colorama import init, Fore
-from tools import get_all_files, is_exists, is_ignored, get_ignore, generate_hash
+from tools import get_all_files, is_exists, is_ignored, get_ignore, generate_hash, is_vcs_initialized
 
 # Colorama init
 init(autoreset=True)
@@ -29,7 +28,7 @@ class Add:
 
     def add_tracked_file(self, file_name: str) -> None:
         """Function to add file to tracked list"""
-        if not self.is_tracked_files_exists():
+        if not is_vcs_initialized(self.run_path):
             print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
             return
 
@@ -68,13 +67,9 @@ class Add:
         print(f'{len(not_ignored_files)} were added to tracked list')
         print(Fore.GREEN + 'Files were successfully added to tracked list')
 
-    def is_tracked_files_exists(self) -> bool:
-        """Function to check is .vcs exists"""
-        return os.path.exists(self.run_path + '/.vcs')
-
     def tracked_files_list(self) -> None:
         """Function to print list of current tracked files"""
-        if not self.is_tracked_files_exists():
+        if not is_vcs_initialized(self.run_path):
             print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
             return
 
@@ -88,3 +83,12 @@ class Add:
         else:
             print(Fore.YELLOW + 'No tracking files. Use "vcs add <file_name | -A | .>"')
             return
+
+    def tracked_files_clean(self) -> None:
+        """Function to clean tracked files list"""
+        if not is_vcs_initialized(self.run_path):
+            print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
+            return
+        with open(self.tracked_files_path, 'w') as file:
+            file.write('[]')
+        print(Fore.GREEN + '\nTracked files have been cleared')

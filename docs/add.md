@@ -3,7 +3,7 @@
 ## Add files
 \
 Add all files in current folder to tracked list
-```diff
+```shell
 ~ python vcs.py add .
 
 Found 3 ignores
@@ -11,7 +11,7 @@ Found 3 ignores
 Files were successfully added to tracked list
 ```
 or
-```diff
+```shell
 ~ python vcs.py add -A
 
 Found 3 ignores
@@ -20,7 +20,7 @@ Files were successfully added to tracked list
 ```
 \
 Add one file from current folder to traked list
-```diff
+```shell
 ~ python vcs.py add file_name.example
 
 Found 3 ignores
@@ -31,7 +31,7 @@ ___
 ## Print current tracked files list
 
 
-```diff
+```shell
 Traking files:
     /LICENSE
     /README.md
@@ -45,6 +45,18 @@ Traking files:
     /tools/__init__.py
     /tools/ignore_tools.py
     /docs/img/init_function.png
+```
+
+___
+
+## Help message:
+```shell
+vcs add <file_name> | . | -A
+    . = -A - Add all files in current directory to tracked files list
+vcs add
+    -l - Print all tracked files list
+    -c | --clean - Clear tracked files list
+    -h | --help - This help
 ```
 
 ___

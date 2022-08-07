@@ -20,11 +20,13 @@ init(autoreset=True)
 class Init:
     """Class to init vcs working tree"""
 
-    def __init__(self, run_path: str, base_branch: str = 'master'):
+    def __init__(self, run_path: str, base_branch: str = 'master', quiet: bool = False):
         self.run_path = run_path
         self.branch_name = base_branch
+        self.quiet = quiet
         self.create_vcs_dir()
-        print(Fore.GREEN + '\nVCS initialized successfully')
+        if not quiet:
+            print(Fore.GREEN + '\nVCS initialized successfully')
 
     def create_vcs_dir(self) -> None:
         """Function to create .vcs dir in working dir"""
@@ -49,7 +51,8 @@ class Init:
     def create_config(self, main_branch: str) -> None:
         """Function to create config files in root of .vcs/.
             Where im going to save current branch and list of branch names"""
-        print(Fore.YELLOW + f'Set main branch as {self.branch_name}')
+        if not self.quiet:
+            print(Fore.YELLOW + f'Set main branch as {self.branch_name}')
         config_data = {main_branch: self.branch_name}
         with open(self.run_path + '/.vcs/config.json', 'w') as file:
             json.dump(config_data, file, indent=4)
