@@ -27,7 +27,24 @@ Found 3 ignores
 1 was added to tracked list
 Files were successfully added to tracked list
 ```
+\
+Add files and be verbose
+```shell
+~ python ../vcs.py add . -v
+
+Found 4 ignores
+Added files:
+    /main.py - f44014d759c159acba60a8d99a5512f81bb62f994ac877693aed43cd9da00e50
+    /LICENSE - 12de9234cb2d3793b126aba8704eacc890a685f6f163b6c1a784afd1f9f26b48
+    /.ignore - 56fedfcbc4dcd01138579f78f18d2a8be5b79ba7b51bfadaa0da860d55fca7bb
+    /README.md - 95e0a42d9d6b5d82bdb3752f4d31f3fe7d0150c6b512bc094985b1a2b24b192b
+
+4 were added to tracked list
+Files were successfully added to tracked list
+```
+
 ___
+
 ## Print current tracked files list
 
 
@@ -56,6 +73,7 @@ vcs add <file_name> | . | -A
 vcs add
     -l - Print all tracked files list
     -c | --clean - Clear tracked files list
+    -v | --verbose - Be verbose
     -h | --help - This help
 ```
 
