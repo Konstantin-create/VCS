@@ -2,9 +2,9 @@
 <br>
 Output from commit command have some color indications:
 
-- [master <span style="color: green">815567</span>] `<Commit text>` - Initial commit
-- [master <span style="color: orange">815567</span>] `<Commit text>` - Child commit
-- [master <span style="color: red">815567</span>] `<Commit text>` - Hard reset commit
+- [master <span style="color: green">815567</span>] `<Commit text>` - Green - Initial commit
+- [master <span style="color: orange">815567</span>] `<Commit text>` - Yellow - Child commit
+- [master <span style="color: red">815567</span>] `<Commit text>` - Red - Hard reset commit
 
 ___
 
