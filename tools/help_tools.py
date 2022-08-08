@@ -22,6 +22,7 @@ vcs add
     -l - Print all tracked files list
     -c | --clean - Clear tracked files list
     -v | --verbose - Be verbose
+    -f | --force - Disregard .ignore file
     -h | --help - This help
 """
 
