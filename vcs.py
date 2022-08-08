@@ -7,7 +7,8 @@ Functions:
 """
 
 # Imports
-from tools import is_vcs_initialized, init_help, add_help, commit_help
+from tools import is_vcs_initialized
+from tools import init_help, add_help, commit_help, ignore_help
 from tools.flags_tools import *
 from commands import *
 from colorama import init, Fore
@@ -81,6 +82,17 @@ def main():
                     print(Fore.RED + 'Commit text error. Use "vcs commit --help" for help')
             else:
                 print(Fore.RED + 'Command not found. User "vcs commit --help" for help')
+
+        elif args[1].lower() == 'ignore':
+            ignore = Ignore(cwd)
+            if '-h' in args or '--help' in args:
+                ignore_help()
+            if '-n' in args or '--new' in args:
+                ignore.create_file()
+            elif '-l' in args or '--list' in args:
+                ignore.get_ignore_list()
+        else:
+            print(Fore.RED + f'No such command {args[1]}')
 
 
 if __name__ == '__main__':

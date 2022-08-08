@@ -4,6 +4,7 @@ Functions:
     - Index command  help text
     - Add command help text
     - Commit command help text
+    - Ignore command help text
 """
 
 # Vars with help text
@@ -32,6 +33,11 @@ vcs commit -t "<Your commit text>" --hard - Create commit, and remove all previo
 vcs commit -h | --help - This help
 """
 
+ignore_text = """
+vcs ignore -n | --new - Create .ignore file with base ignores
+vcs ignore -l | --list - Get list of ignores
+vcs ignore -h | --help - This help
+"""
 
 # Print help functions
 def init_help():
@@ -44,3 +50,7 @@ def add_help():
 
 def commit_help():
     print(commit_text)
+
+def ignore_help():
+    print(ignore_text)
+
