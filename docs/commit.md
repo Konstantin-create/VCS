@@ -17,7 +17,7 @@ Base commit example
 ```
 Commit with remove commits history
 ```shell
-~ python ../vcs.py commit -t "Hard reset commit" --hard
+~ python vcs.py commit -t "Hard reset commit" --hard
 [main 9c4138] Hard reset commit
  1 have been objects created
 ```

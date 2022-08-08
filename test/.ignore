@@ -1,4 +1,3 @@
+# Base ignores
 /.git
-/.vcs
-/__pycache__
-/.idea
+/.vcs/

@@ -30,7 +30,7 @@ Files were successfully added to tracked list
 \
 Add files and be verbose
 ```shell
-~ python ../vcs.py add . -v
+~ python vcs.py add . -v
 
 Found 4 ignores
 Added files:
@@ -45,7 +45,7 @@ Files were successfully added to tracked list
 \
 Disregard .ignore file
 ```shell
-~ python ../vcs.py add . -v -f
+~ python vcs.py add . -v -f
 Force mode. .ignore file will not be read
 Added files:
     /main.py - f44014d759c159acba60a8d99a5512f81bb62f994ac877693aed43cd9da00e50
@@ -66,6 +66,7 @@ ___
 
 
 ```shell
+~ python vcs.py add -l
 Traking files:
     /LICENSE
     /README.md
