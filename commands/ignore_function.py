@@ -7,6 +7,7 @@ Functions:
 
 # Imports
 import os
+from tools import get_ignore
 from colorama import init, Fore
 
 # Colorama init
@@ -34,3 +35,15 @@ class Ignore:
         with open(f'{self.working_dir}/.ignore', 'w') as file:
             file.write(self.base_ignores)
 
+    def get_ignore_list(self) -> None:
+        """Function to get list of ignores from .ignore"""
+        ignores = get_ignore(self.working_dir)
+        if ignores is None:
+            print(Fore.RED + '.ignore file not found. Try "vcs ignore -n | --new" to create this')
+            return
+        if len(ignores):
+            print(Fore.YELLOW + 'No ignores found')
+        print('Ignores:')
+        print('  '+'\n  '.join(ignores))
+        print()
+        print(Fore.GREEN + f'Total {len(ignores)} ignores foud')

@@ -89,6 +89,8 @@ def main():
                 ignore_help()
             if '-n' in args or '--new' in args:
                 ignore.create_file()
+            elif '-l' in args or '--list' in args:
+                ignore.get_ignore_list()
         else:
             print(Fore.RED + f'No such command {args[1]}')
 

@@ -35,6 +35,7 @@ vcs commit -h | --help - This help
 
 ignore_text = """
 vcs ignore -n | --new - Create .ignore file with base ignores
+vcs ignore -l | --list - Get list of ignores
 vcs ignore -h | --help - This help
 """
 

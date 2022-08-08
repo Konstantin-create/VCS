@@ -6,11 +6,21 @@ Base create with base ignores(like .git, .vcs, ect...)
 .ignore file with base exceptions was created successfully
 ```
 
+## Print all exeptions from .ignore file
+```shell
+~ python vcs.py ignore -l
+Ignores:
+  /.git
+  /.vcs/
+
+Total 2 ignores
+```
 ___
 
 ## Help message
 ```shell
 vcs ignore -n | --new - Create .ignore file with base ignores
+vcs ignore -l | --list - Get list of ignores
 vcs ignore -h | --help - This help
 ```
 ___
