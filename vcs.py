@@ -56,9 +56,12 @@ def main():
                     add.tracked_files_clean()
                 else:
                     verbose = False
+                    force = False
                     if '-v' in args or '--verbose' in args:
                         verbose = True
-                    add.add_tracked_file(args[args.index('add') + 1], verbose)
+                    if '-f' in args or '--force' in args:
+                        force = True
+                    add.add_tracked_file(args[args.index('add') + 1], verbose, force)
 
         elif args[1].lower() == 'commit':
             if '--help' in args or '-h' in args:

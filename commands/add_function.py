@@ -19,21 +19,23 @@ init(autoreset=True)
 
 
 class Add:
-    __slots__ = ('run_path', 'tracked_files_path', 'verbose')
+    __slots__ = ('run_path', 'tracked_files_path', 'verbose', 'force')
     """Class to manage tracked files list"""
 
     def __init__(self, run_path) -> None:
         self.run_path = run_path
         self.tracked_files_path = self.run_path + '/.vcs/tracked_files.json'
         self.verbose = False
+        self.force = False
 
-    def add_tracked_file(self, file_name: str, verbose: bool) -> None:
+    def add_tracked_file(self, file_name: str, verbose: bool, force: bool) -> None:
         """Function to add file to tracked list"""
         if not is_vcs_initialized(self.run_path):
             print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
             return
 
         self.verbose = verbose
+        self.force = force
 
         current_tracking = []
         if os.path.exists(self.tracked_files_path):
@@ -53,17 +55,20 @@ class Add:
         else:
             current_tracking = get_all_files(self.run_path)
 
-        print(current_tracking)
-
         not_ignored_files = []
-        ignore = get_ignore(self.run_path)
-        if ignore:
-            for file in current_tracking:
-                if not is_ignored(ignore, file) and is_exists(self.run_path, file):
+        if not self.force:
+            ignore = get_ignore(self.run_path)
+            if ignore:
+                for file in current_tracking:
+                    if not is_ignored(ignore, file) and is_exists(self.run_path, file):
+                        not_ignored_files.append({file: generate_hash(file.encode())})
+                print(Fore.GREEN + f'\nFound {len(ignore)} ignores')
+            else:
+                print(Fore.YELLOW + f'\nNo ignores found!')
+                for file in current_tracking:
                     not_ignored_files.append({file: generate_hash(file.encode())})
-            print(Fore.GREEN + f'\nFound {len(ignore)} ignores')
         else:
-            print(Fore.YELLOW + f'\nNo ignores found!')
+            print(Fore.YELLOW + 'Force mode. .ignore file will not be read')
             for file in current_tracking:
                 not_ignored_files.append({file: generate_hash(file.encode())})
 
