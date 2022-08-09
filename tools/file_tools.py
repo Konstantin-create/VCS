@@ -9,6 +9,7 @@ Functions list:
 
 # Imports
 import os
+import json
 
 
 def get_all_files(working_dir: str) -> list:
@@ -36,3 +37,12 @@ def get_branch_name(working_dir: str) -> str:
 def is_vcs_initialized(working_dir: str) -> bool:
     """Function to check is .vcs dir exists"""
     return os.path.exists(working_dir + '/.vcs/')
+
+def last_commit_hash(working_dir: str) -> str:
+    """Function to get last commit hash"""
+    with open(f'{working_dir}/.vcs/config.json', 'r') as file:
+        config_data = json.load(file)
+    if get_branch_name(working_dir) not in config_data:
+        return None
+    return config_data[get_branch_name(working_dir)]
+

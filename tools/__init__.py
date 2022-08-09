@@ -7,3 +7,5 @@ from tools.ignore_tools import *
 from tools.hash_tools import *
 from tools.commit_tools import *
 from tools.help_tools import *
+from tools.ignore_tpl_tools import *
+

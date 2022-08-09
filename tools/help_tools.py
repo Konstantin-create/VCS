@@ -34,9 +34,16 @@ vcs commit -h | --help - This help
 """
 
 ignore_text = """
-vcs ignore -n | --new - Create .ignore file with base ignores
+vcs ignore 
+    -n | --new - Create .ignore file with base ignores
+    -t | --template - Create .ignore file with base ignores and template
+vcs ignore -tl | --template-list - Print list  of templates
 vcs ignore -l | --list - Get list of ignores
 vcs ignore -h | --help - This help
+"""
+
+log_text = """
+vcs log - Print last commit log
 """
 
 # Print help functions
@@ -54,3 +61,5 @@ def commit_help():
 def ignore_help():
     print(ignore_text)
 
+def log_help():
+    print(log_text)

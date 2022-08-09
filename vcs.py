@@ -7,11 +7,14 @@ Functions:
 """
 
 # Imports
+from ast import arg
 from tools import is_vcs_initialized
 from tools import init_help, add_help, commit_help, ignore_help
 from tools.flags_tools import *
 from commands import *
 from colorama import init, Fore
+
+from tools.help_tools import log_help
 
 # Colorama init
 init(autoreset=True)
@@ -87,10 +90,23 @@ def main():
             ignore = Ignore(cwd)
             if '-h' in args or '--help' in args:
                 ignore_help()
-            if '-n' in args or '--new' in args:
-                ignore.create_file()
+            if '-tl' in args or '--template-list' in args:
+                ignore.get_template_list()
+            elif '-n' in args or '--new' in args:
+                template = False
+                if '-t' in args and len(args) >= args.index('-t') + 1:
+                    template = args[args.index('-t') + 1]
+                elif '--template' in args and len(args) >= args.index('--template') + 1:
+                    template = args[args.index('--template') + 1]
+                ignore.create_file(template=template)
             elif '-l' in args or '--list' in args:
                 ignore.get_ignore_list()
+        elif args[1].lower() == 'log':
+            if '-h' in args or '--help' in args:
+                log_help()
+                sys.exit()
+            log = Log(cwd)
+            log.get_commit_info()
         else:
             print(Fore.RED + f'No such command {args[1]}')
 
