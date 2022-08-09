@@ -1,5 +1,6 @@
-from commands.init_function import *
-from commands.add_function import *
-from commands.commit_function import *
-from commands.ignore_function import *
+from .init_function import *
+from .add_function import *
+from .commit_function import *
+from .ignore_function import *
+from .log_function import *
 

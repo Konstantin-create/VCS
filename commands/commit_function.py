@@ -49,10 +49,16 @@ class Commit:
         commit_info = self.create_commit_info(created_objects)
         commit_hash = generate_hash(str(commit_info).encode())
         self.create_commit_dir(commit_hash, commit_info)
+
+        with open(f'{self.vcs_path}/config.json', 'r') as file:
+            config_data = json.load(file)
+        config_data[self.branch_name] = commit_hash
+        json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
+
         if hard_commit:
-            print(f'[{self.branch_name} {Fore.RED + + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+            print(f'[{self.branch_name} {Fore.RED + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
         else:
-            print(f'[{self.branch_name} {Fore.GREEN + + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+            print(f'[{self.branch_name} {Fore.GREEN + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
         print(f' {len(created_objects)} have been objects created')
 
     def child_commit(self):
@@ -63,7 +69,12 @@ class Commit:
         commit_info = self.create_commit_info(created_objects)
         commit_hash = generate_hash(str(commit_info).encode())
 
-        print(f'[{self.branch_name} {Fore.YELLOW + + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+        with open(f'{self.vcs_path}/config.json', 'r') as file:
+            config_data = json.load(file)
+        config_data[self.branch_name] = commit_hash
+        json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
+
+        print(f'[{self.branch_name} {Fore.YELLOW + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
         print(f' {len(created_objects)} have been objects created')
 
     def hard_commit(self):

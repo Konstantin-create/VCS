@@ -42,6 +42,10 @@ vcs ignore -l | --list - Get list of ignores
 vcs ignore -h | --help - This help
 """
 
+log_text = """
+vcs log - Print last commit log
+"""
+
 # Print help functions
 def init_help():
     print(init_text)
@@ -57,3 +61,5 @@ def commit_help():
 def ignore_help():
     print(ignore_text)
 
+def log_help():
+    print(log_text)

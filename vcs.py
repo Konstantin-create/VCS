@@ -14,6 +14,8 @@ from tools.flags_tools import *
 from commands import *
 from colorama import init, Fore
 
+from tools.help_tools import log_help
+
 # Colorama init
 init(autoreset=True)
 
@@ -99,6 +101,12 @@ def main():
                 ignore.create_file(template=template)
             elif '-l' in args or '--list' in args:
                 ignore.get_ignore_list()
+        elif args[1].lower() == 'log':
+            if '-h' in args or '--help' in args:
+                log_help()
+                sys.exit()
+            log = Log(cwd)
+            log.get_commit_info()
         else:
             print(Fore.RED + f'No such command {args[1]}')
 

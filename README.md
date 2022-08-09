@@ -28,6 +28,7 @@ ___
     - [Init](/docs/init.md)
     - [Add](/docs/add.md)
     - [Commit](/docs/commit.md)
+    - [Log](/docs/log.md)
 
 ___
 
