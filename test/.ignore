@@ -1,17 +1,4 @@
 # Base ignores
 /.git
 /.vcs/
-# Python ignores
-# Cache
-__pycache__
-
-# Enviroments
-venv/
-env/
-.venv/
-.env/
-
-# Pyinstaller
-.spec
-.manifest
 
