@@ -17,7 +17,7 @@ import shutil
 from datetime import datetime
 from colorama import init, Fore
 from tools import generate_hash, pretty_hash
-from tools import get_branch_name, is_vcs_initialized
+from tools import get_branch_name, is_vcs_initialized, last_commit_hash
 from tools import encode_file
 
 # Colorama init
@@ -31,12 +31,12 @@ class Commit:
         self.working_dir = working_dir
         self.vcs_path = working_dir + '/.vcs'
         self.message = message
-        self.last_commit = self.get_last_commit()
+        self.last_commit = last_commit_hash(self.working_dir)
         self.branch_name = get_branch_name(self.working_dir)
 
     def commit(self) -> None:
         """Commit function"""
-        if not self.last_commit:
+        if self.last_commit != '':
             self.initial_commit()
             return
         self.child_commit()
@@ -117,14 +117,10 @@ class Commit:
             print(Fore.YELLOW + 'Repo is already up to date')
         return created_objects
 
-    def get_last_commit(self) -> str | None:
-        """Function to get last commit hash"""
-        if os.path.exists(self.vcs_path + '/LAST_COMMIT'):
-            return open(self.vcs_path + '/LAST_COMMIT').read()
-        return None
 
     # Create block
     def create_commit_dir(self, commit_hash, commit_info):
+        print('Create commit dir function')
         """Create commit dir and commit_info file"""
         if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}'):
             print(Fore.RED + 'Repo is already up to date')

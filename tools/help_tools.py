@@ -44,6 +44,7 @@ vcs ignore -h | --help - This help
 
 log_text = """
 vcs log - Print last commit log
+vcs log -a | --all - Print all commits
 """
 
 # Print help functions

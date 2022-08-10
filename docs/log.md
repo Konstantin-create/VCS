@@ -17,10 +17,21 @@ Print commit by commit hash
     Time stamp: 2022-08-09 18:06:39.970791
     Parent: None
 ```
+\
+Print all commits in dir
+```shell
+~ python vcs.py log -a
 
+82e9945d440a48127ce9cedcc7b31f26319535ed79bed0f0bf2cb784e169bfca
+75eaae1c63a01b7c9cf3c0913e958ffc87642531a5c35ff42f54ba03f7dbea5c
+6ab6a9dbb43097b2d0a8737ce37f42e6419cca3b77dc1faabfa7ca2d816373ec - Initial commit
+
+Total 3 commits found
+```
 ## Help message
 ```shell
 vcs log - Print last commit log
+vcs log -a | --all - Print all commits
 ```
 ___
 

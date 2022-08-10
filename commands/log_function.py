@@ -21,6 +21,7 @@ class Log:
         self.working_dir = working_dir
 
     def get_commit_info(self, commit_hash: str = '') -> None:
+        """Function to get commit info by hash or get last commit info"""
         if commit_hash == '':
             if not last_commit_hash(self.working_dir):
                 print(Fore.RED + 'You have no commits in this dir')
@@ -44,3 +45,35 @@ class Log:
                 print()
             else:
                 print(Fore.RED + f'Commit {commit_hash} not found!')
+    
+
+    def get_all_commits(self) -> None:
+        """Function to print all of commits"""
+        if not last_commit_hash(self.working_dir):
+            print(Fore.RED + 'You have no commits in this dir')
+            return
+        commits_path = f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
+        if os.path.exists(f'{commits_path}/{last_commit_hash(self.working_dir)}/commit_info.json'):
+            with open(f'{commits_path}/{last_commit_hash(self.working_dir)}/commit_info.json') as file:
+                last_commit = json.load(file)
+
+            counter = 1
+            print()
+            print(last_commit_hash(self.working_dir))
+
+            if last_commit['parent']:
+                while True:
+                    if os.path.exists(f'{commits_path}/{last_commit["parent"]}/commit_info.json'):
+                        previous_commit = last_commit['parent']
+                        with open(f'{commits_path}/{last_commit["parent"]}/commit_info.json') as file:
+                            last_commit = json.load(file)
+                        counter += 1
+                    if last_commit['parent'] == get_branch_name(self.working_dir):
+                        print(Fore.YELLOW + previous_commit + ' - Initial commit')
+                        break
+                    print(previous_commit)
+                    
+            print()
+            print(f'Total {counter} commits found')
+        else:
+            print(Fore.RED + 'Commit storage error try to use help on https://github.com/Konstantin-create/VCS/')
