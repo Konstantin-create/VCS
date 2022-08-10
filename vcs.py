@@ -106,7 +106,10 @@ def main():
                 log_help()
                 sys.exit()
             log = Log(cwd)
-            log.get_commit_info()
+            if len(args) >= 3:
+                log.get_commit_info(commit_hash=args[2])
+            else:
+                log.get_commit_info()
         else:
             print(Fore.RED + f'No such command {args[1]}')
 

@@ -33,3 +33,14 @@ class Log:
                 print(f'Time stamp: {commit_info["time_stamp"]}')
                 print(f'Parent: {commit_info["parent"]}')
                 print()
+        else:
+            if os.path.exists(f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{commit_hash}/commit_info.json'):
+                with open(f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{commit_hash}/commit_info.json') as file:
+                    commit_info = json.load(file)
+                print(f'Commit: {commit_hash}')
+                print(f'Message: {commit_info["message"]}')
+                print(f'Time stamp: {commit_info["time_stamp"]}')
+                print(f'Parent: {commit_info["parent"]}')
+                print()
+            else:
+                print(Fore.RED + f'Commit {commit_hash} not found!')
