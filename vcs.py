@@ -9,7 +9,7 @@ Functions:
 # Imports
 from ast import arg
 from tools import is_vcs_initialized
-from tools import init_help, add_help, commit_help, ignore_help
+from tools import init_help, add_help, commit_help, ignore_help, vcs_help
 from tools.flags_tools import *
 from commands import *
 from colorama import init, Fore
@@ -113,6 +113,8 @@ def main():
                     log.get_commit_info(commit_hash=args[2])
                 else:
                     log.get_commit_info()
+        elif args[1].lower() == '-h' or args[1].lower() == '--help':
+            vcs_help()
         else:
             print(Fore.RED + f'No such command {args[1]}')
 
