@@ -9,6 +9,14 @@ Functions:
 
 # Vars with help text
 
+vcs_text = """
+vcs init - Initial command
+vcs add - Command to add files in tracked list
+vcs commit - Command to commit changes
+vcs ignore - Command to modify ignore file
+vcs -h | --help - This help
+"""
+
 init_text = """
 vcs init
     -b "<branch name>" - Create first branch with custom name
@@ -48,6 +56,9 @@ vcs log -a | --all - Print all commits
 """
 
 # Print help functions
+def vcs_help():
+    print(vcs_text)
+
 def init_help():
     print(init_text)
 
