@@ -85,10 +85,6 @@ class Add:
 
     def tracked_files_list(self) -> None:
         """Function to print list of current tracked files"""
-        if not is_vcs_initialized(self.run_path):
-            print(Fore.RED + '.vcs folder not found\nTry "vcs init"')
-            return
-
         if os.path.exists(self.tracked_files_path):
             with open(self.tracked_files_path, 'r', encoding='utf-8') as file:
                 if len(file.read()):
