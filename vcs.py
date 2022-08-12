@@ -113,6 +113,9 @@ def main():
                     log.get_commit_info(commit_hash=args[2])
                 else:
                     log.get_commit_info()
+        elif args[1].lower() == 'reset':
+            reset = Reset(cwd)
+            reset.last_commit()
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
         else:
