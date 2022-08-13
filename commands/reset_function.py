@@ -2,7 +2,8 @@
 File of reset command
 Functions:
     - Reset last commit
-    - Reser commit by hash
+    - Reset in verbose mode
+    - Reset commit by hash
 """
 
 # Imports
