@@ -9,8 +9,9 @@ Functions:
 import os
 import sys
 import json
+from datetime import datetime
 from colorama import init, Fore
-from tools import last_commit_hash, previous_commit_hash
+from tools import last_commit_hash, previous_commit_hash, decode_file, generate_hash
 from tools import get_branch_name, get_tracked_files
 
 # Colorama init
@@ -66,7 +67,25 @@ class Rollback:
                         ]
                     }
                 )
-        print(changes)
+        print(f'Current commit: {self.last_commit_hash}')
+        print(f'Rollback to commit: {self.previous_commit_hash}')
+        print(f'Changes to rewrite: {len(changes)}')
+        print()
+        if verbose:
+            for file in changes:
+                print(f'    File name: {list(file.keys())[0]}')
+                print(f'    File data hash: {file[list(file.keys())[0]][1]}')
+                print()
+ 
+        self.recovery_files(changes)
+        self.rollback_commit(changes)
+        print()
+        if verbose:
+            for file in changes:
+                print(f'    File name: {list(file.keys())[0]}')
+                print(f'    File data hash: {file[list(file.keys())[0]][1]}')
+                print()
+        print(Fore.GREEN + 'Lucky rollback')
 
     def check_file_objects(self, file_hash: str) -> list:
         """Function to get file objects"""
@@ -100,3 +119,35 @@ class Rollback:
                     print(Fore.RED + 'Commit storage error')
                     sys.exit()
                 current_commit = commit_data['parent']
+
+    def recovery_files(self, changes: list) -> None:
+        """Function to rewrite all files"""
+        for file in self.tracked_files:
+            if os.path.exists(f'{self.working_dir}/{list(file.keys())[0]}'):
+                os.remove(f'{self.working_dir}/{list(file.keys())[0]}')
+        for file in changes:
+            decode_file(
+                f'{self.vcs_path}/objects/{file[list(file.keys())[0]][0]}/{file[list(file.keys())[0]][1]}',
+                f'{self.working_dir}/{list(file.keys())[0]}'
+            )
+    
+    def rollback_commit(self, changes: list) -> None:
+        """Function to create rollback commit"""
+        commit_changes = []
+        for file in changes:
+            file_name = list(file.keys())[0]
+            commit_changes.append({file[file_name][0]: file[file_name][1]})
+        commit_info = {
+            'message': f'Rollback to {self.previous_commit_hash}',
+            'changes': commit_changes,
+            'time_stamp': str(datetime.utcnow()),
+            'parent': self.last_commit_hash
+        }
+        commit_hash = generate_hash(str(commit_info).encode())
+        if not os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/commit_info.json'):
+            os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/')
+            with open(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/commit_info.json', 'w') as file:
+                json.dump(commit_info, file)
+        else:
+            print(Fore.RED + 'Repo is already up to date')
+

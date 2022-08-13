@@ -9,7 +9,7 @@ Functions:
 # Imports
 from ast import arg
 from tools import is_vcs_initialized
-from tools import init_help, add_help, commit_help, ignore_help, vcs_help
+from tools.help_tools import *
 from tools.flags_tools import *
 from commands import *
 from colorama import init, Fore
@@ -101,6 +101,7 @@ def main():
                 ignore.create_file(template=template)
             elif '-l' in args or '--list' in args:
                 ignore.get_ignore_list()
+
         elif args[1].lower() == 'log':
             if '-h' in args or '--help' in args:
                 log_help()
@@ -113,13 +114,23 @@ def main():
                     log.get_commit_info(commit_hash=args[2])
                 else:
                     log.get_commit_info()
+
         elif args[1].lower() == 'reset':
+            if '-h' in args or '--help' in args:
+                reset_help()
+                return
+
             verbose = False
             if '-v' in args or '--verbose' in args:
                 verbose = True
             reset = Reset(cwd)
             reset.last_commit(verbose=verbose)
+
         elif args[1].lower() == 'rollback':
+            if '-h' in args or '--help' in args:
+                rollback_help()
+                return
+
             verbose = False
             if '-v' in args or '--verbose' in args:
                 verbose = True
@@ -127,6 +138,7 @@ def main():
             rollback.rollback(verbose)
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
+            
         else:
             print(Fore.RED + f'No such command {args[1]}')
 
