@@ -106,7 +106,13 @@ class Reset:
 
     def found_last_file_hash(self, filename_hash: str) -> str:
         """Found last file hash function"""
-        current_commit = self.last_commit_hash
+
+        if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json'):
+            with open(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json') as file:
+                current_commit = json.load(file)['parent']
+        else:
+            print(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json not exists!')
+            sys.exit()
 
         while True:
             if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{current_commit}/commit_info.json'):
