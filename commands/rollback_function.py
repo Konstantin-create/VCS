@@ -1,43 +1,40 @@
 """
 File of reset command
 Functions:
-    - Reset last commit
-    - Reset in verbose mode
-    - Reset commit by hash
+    - Rollback last commit
+    - Rollback in verbose mode
 """
 
 # Imports
 import os
 import sys
 import json
-import shutil
+from datetime import datetime
 from colorama import init, Fore
-from tools import last_commit_hash, previous_commit_hash
-from tools import get_branch_name, decode_file, get_tracked_files
+from tools import last_commit_hash, previous_commit_hash, decode_file, generate_hash
+from tools import get_branch_name, get_tracked_files
 
 # Colorama init
 init()
 
 
-class Reset:
-    """Class of reset command"""
+class Rollback:
+    """Class of rollback command"""
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir
-        self.vcs_path = f'{working_dir}/.vcs'
+        self.vcs_path = f'{self.working_dir}/.vcs'
         self.branch_name = get_branch_name(self.working_dir)
         self.last_commit_hash = last_commit_hash(self.working_dir)
-        self.tracked_files = get_tracked_files(self.working_dir)
         self.previous_commit_hash = previous_commit_hash(self.vcs_path, self.branch_name, self.last_commit_hash)
+        self.tracked_files = get_tracked_files(self.working_dir)
 
-    def last_commit(self, verbose: bool = False) -> None:
-        """Function to reset last commit"""
-
-        # Check is user want to reset initial commit
+    def rollback(self, verbose: bool = False):
+        """Function to rollback last commit"""
         if not self.previous_commit_hash:
             print(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json not exists!')
         if self.previous_commit_hash == self.branch_name:
-            print(Fore.RED + 'You cant reset initial commit')
+            print(Fore.RED + 'You cant rollback initial commit')
             sys.exit()
 
         changes = []
@@ -71,7 +68,7 @@ class Reset:
                     }
                 )
         print(f'Current commit: {self.last_commit_hash}')
-        print(f'Rollback to commit {self.previous_commit_hash}')
+        print(f'Rollback to commit: {self.previous_commit_hash}')
         print(f'Changes to rewrite: {len(changes)}')
         print()
         if verbose:
@@ -79,9 +76,16 @@ class Reset:
                 print(f'    File name: {list(file.keys())[0]}')
                 print(f'    File data hash: {file[list(file.keys())[0]][1]}')
                 print()
-        print(Fore.GREEN + 'Lucky rollback')
+ 
         self.recovery_files(changes)
-        self.remove_last_commit()
+        self.rollback_commit(changes)
+        print()
+        if verbose:
+            for file in changes:
+                print(f'    File name: {list(file.keys())[0]}')
+                print(f'    File data hash: {file[list(file.keys())[0]][1]}')
+                print()
+        print(Fore.GREEN + 'Lucky rollback')
 
     def check_file_objects(self, file_hash: str) -> list:
         """Function to get file objects"""
@@ -126,22 +130,24 @@ class Reset:
                 f'{self.vcs_path}/objects/{file[list(file.keys())[0]][0]}/{file[list(file.keys())[0]][1]}',
                 f'{self.working_dir}/{list(file.keys())[0]}'
             )
-
-    def remove_last_commit(self) -> None:
-        """Function to remove last commit"""
-
-        # Set new config data
-        if os.path.exists(f'{self.vcs_path}/config.json'):
-            with open(f'{self.vcs_path}/config.json', 'r') as file:
-                config_data = json.load(file)
-            config_data[self.branch_name] = self.previous_commit_hash
-            json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
+    
+    def rollback_commit(self, changes: list) -> None:
+        """Function to create rollback commit"""
+        commit_changes = []
+        for file in changes:
+            file_name = list(file.keys())[0]
+            commit_changes.append({file[file_name][0]: file[file_name][1]})
+        commit_info = {
+            'message': f'Rollback to {self.previous_commit_hash}',
+            'changes': commit_changes,
+            'time_stamp': str(datetime.utcnow()),
+            'parent': self.last_commit_hash
+        }
+        commit_hash = generate_hash(str(commit_info).encode())
+        if not os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/commit_info.json'):
+            os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/')
+            with open(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/commit_info.json', 'w') as file:
+                json.dump(commit_info, file)
         else:
-            print(Fore.RED + '.vcs/config.json is not exists')
-            sys.exit()
+            print(Fore.RED + 'Repo is already up to date')
 
-        # Remove .vcs/commits/<branch_name>/<commit_hash>
-        if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}'):
-            shutil.rmtree(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}')
-        else:
-            print(Fore.RED + f'.vcs/commits/{self.branch_name}/{self.last_commit_hash} not exists')

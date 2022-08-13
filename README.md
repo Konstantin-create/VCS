@@ -29,6 +29,7 @@ ___
     - [Add](/docs/add.md)
     - [Commit](/docs/commit.md)
     - [Reset](/docs/reset.md)
+    - [Rollback](/docs/rollback.md)
     - [Log](/docs/log.md)
 ___
 

@@ -46,3 +46,26 @@ def last_commit_hash(working_dir: str) -> str | None:
     if get_branch_name(working_dir) not in config_data:
         return None
     return config_data[get_branch_name(working_dir)]
+
+
+def previous_commit_hash(vcs_path: str, branch_name: str, commit_hash: str) -> str | None:
+    """Function to get previous commit hash"""
+
+    if os.path.exists(f'{vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json'):
+        with open(f'{vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json') as file:
+            previous_commit = json.load(file)['parent']
+            return previous_commit
+    else:
+        return None
+
+
+def get_tracked_files(working_dir) -> None:
+    """Function to print list of current tracked files"""
+
+    if os.path.exists(f'{working_dir}/.vcs/tracked_files.json'):
+        with open(f'{working_dir}/.vcs/tracked_files.json', 'r', encoding='utf-8') as file:
+            if len(file.read()):
+                current_tracking = json.load(open(f'{working_dir}/.vcs/tracked_files.json'))
+                return current_tracking
+    print(Fore.YELLOW + 'No tracking files. Use "vcs add <file_name | -A | .>"')
+    sys.exit()

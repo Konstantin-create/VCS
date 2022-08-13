@@ -13,7 +13,8 @@ vcs_text = """
 vcs init - Initial command
 vcs add - Command to add files in tracked list
 vcs commit - Command to commit changes
-vcs reset - Command to rollback to last commit
+vcs reset - Command to reset last commit
+vcs rollback - Command to rollback to last commit
 vcs ignore - Command to modify ignore file
 vcs -h | --help - This help
 """
@@ -43,9 +44,15 @@ vcs commit -h | --help - This help
 """
 
 reset_text = """
-vcs reset - Reset to last commit
-vcs reset -v | --verbose - Reset to last commit in verbose mode
-vcs reset -h | --help
+vcs reset - Reset last commit
+vcs reset -v | --verbose - Reset last commit in verbose mode
+vcs reset -h | --help - This help
+"""
+
+rollback_text = """
+vcs rollback - Rollback to last commit
+vcs rollback -v | --verbose - Rollback to last commit in verbose mode
+vcs reset -h | --help - This help
 """
 
 ignore_text = """
@@ -83,6 +90,8 @@ def commit_help():
 def reset_help():
     print(reset_text)
 
+def rollback_help():
+    print(rollback_text)
 
 def ignore_help():
     print(ignore_text)
