@@ -119,6 +119,12 @@ def main():
                 verbose = True
             reset = Reset(cwd)
             reset.last_commit(verbose=verbose)
+        elif args[1].lower() == 'rollback':
+            verbose = False
+            if '-v' in args or '--verbose' in args:
+                verbose = True
+            rollback = Rollback(cwd)
+            rollback.rollback(verbose)
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
         else:

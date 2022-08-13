@@ -61,17 +61,17 @@ class Log:
             print()
             print(last_commit_hash(self.working_dir))
 
-            if last_commit['parent']:
+            if last_commit['parent'] != get_branch_name(self.working_dir):
                 while True:
                     if os.path.exists(f'{commits_path}/{last_commit["parent"]}/commit_info.json'):
                         previous_commit = last_commit['parent']
                         with open(f'{commits_path}/{last_commit["parent"]}/commit_info.json') as file:
                             last_commit = json.load(file)
                         counter += 1
-                    if last_commit['parent'] == get_branch_name(self.working_dir):
-                        print(Fore.YELLOW + previous_commit + ' - Initial commit')
-                        break
-                    print(previous_commit)
+                        if last_commit['parent'] == get_branch_name(self.working_dir):
+                            print(Fore.YELLOW + previous_commit + ' - Initial commit')
+                            break
+                        print(previous_commit)
                     
             print()
             print(f'Total {counter} commits found')
