@@ -13,6 +13,7 @@ vcs_text = """
 vcs init - Initial command
 vcs add - Command to add files in tracked list
 vcs commit - Command to commit changes
+vcs reset - Command to rollback to last commit
 vcs ignore - Command to modify ignore file
 vcs -h | --help - This help
 """
@@ -41,6 +42,12 @@ vcs commit -t "<Your commit text>" --hard - Create commit, and remove all previo
 vcs commit -h | --help - This help
 """
 
+reset_text = """
+vcs reset - Reset to last commit
+vcs reset -v | --verbose - Reset to last commit in verbose mode
+vcs reset -h | --help
+"""
+
 ignore_text = """
 vcs ignore 
     -n | --new - Create .ignore file with base ignores
@@ -55,9 +62,11 @@ vcs log - Print last commit log
 vcs log -a | --all - Print all commits
 """
 
+
 # Print help functions
 def vcs_help():
     print(vcs_text)
+
 
 def init_help():
     print(init_text)
@@ -70,8 +79,14 @@ def add_help():
 def commit_help():
     print(commit_text)
 
+
+def reset_help():
+    print(reset_text)
+
+
 def ignore_help():
     print(ignore_text)
+
 
 def log_help():
     print(log_text)

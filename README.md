@@ -28,8 +28,8 @@ ___
     - [Init](/docs/init.md)
     - [Add](/docs/add.md)
     - [Commit](/docs/commit.md)
+    - [Reset](/docs/reset.md)
     - [Log](/docs/log.md)
-
 ___
 
 Author: [Konstantin-create](https://github.com/Konstantin-create)

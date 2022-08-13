@@ -114,8 +114,11 @@ def main():
                 else:
                     log.get_commit_info()
         elif args[1].lower() == 'reset':
+            verbose = False
+            if '-v' in args or '--verbose' in args:
+                verbose = True
             reset = Reset(cwd)
-            reset.last_commit()
+            reset.last_commit(verbose=verbose)
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
         else:
