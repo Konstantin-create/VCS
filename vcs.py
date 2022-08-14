@@ -108,7 +108,10 @@ def main():
                 sys.exit()
             log = Log(cwd)
             if '-a' in args or '--all' in args:
-                log.get_all_commits()
+                verbose = False
+                if '-v' in args or '--verbose' in args:
+                    verbose = True
+                log.get_all_commits(verbose)
             else:
                 if len(args) >= 3:
                     log.get_commit_info(commit_hash=args[2])
