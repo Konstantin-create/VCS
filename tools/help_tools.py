@@ -16,6 +16,8 @@ vcs commit - Command to commit changes
 vcs reset - Command to reset last commit
 vcs rollback - Command to rollback to last commit
 vcs ignore - Command to modify ignore file
+vcs log - Command to print info about commits
+vcs status - Command to print current vcs status
 vcs -h | --help - This help
 """
 
@@ -70,7 +72,8 @@ vcs status - Base command to print status
 
 log_text = """
 vcs log - Print last commit log
-vcs log -a | --all - Print all commits
+    -a | --all - Print all commits
+    -v | --verbose - Be verbose
 """
 
 
