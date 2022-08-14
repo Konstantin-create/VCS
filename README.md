@@ -30,6 +30,7 @@ ___
     - [Commit](/docs/commit.md)
     - [Reset](/docs/reset.md)
     - [Rollback](/docs/rollback.md)
+    - [Status](/docs/status.md)
     - [Log](/docs/log.md)
 ___
 
