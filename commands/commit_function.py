@@ -100,6 +100,10 @@ class Commit:
     def remove_tracked_file(self, filename: str) -> None:
         """Function to remove file from tracked list"""
         current_tracked = self.get_tracked_files()
+        for file in current_tracked:
+            if filename in file:
+                current_tracked.remove(file)
+        json.dump(current_tracked, open(self.vcs_path + '/tracked_files.json', 'w'))
 
     def get_changes(self) -> list:
         """Function to get path to changed files"""
@@ -108,6 +112,7 @@ class Commit:
             sys.exit()
 
         created_objects = []
+        deleted_objects = []
         tracked_files = self.get_tracked_files()
         for file in tracked_files:
             for key in file:
@@ -119,8 +124,15 @@ class Commit:
                     if not os.path.exists(f'{self.vcs_path}/objects/{file[key]}/{file_hash}'):
                         encode_file(self.working_dir + key, f'{self.vcs_path}/objects/{file[key]}/{file_hash}')
                         created_objects.append({file[key]: file_hash})
-        if not len(created_objects):
-            print(Fore.YELLOW + 'Repo is already up to date')
+                else:
+                    self.remove_tracked_file(key)
+                    deleted_objects.append(key)
+        if not deleted_objects:
+            if not len(created_objects):
+                print(Fore.YELLOW + 'Repo is already up to date')
+        else:
+            print('Deleted objects:')
+            print('  ' + '  '.join(deleted_objects))
         return created_objects
 
     # Create block
