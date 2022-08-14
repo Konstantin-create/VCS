@@ -64,6 +64,10 @@ vcs ignore -l | --list - Get list of ignores
 vcs ignore -h | --help - This help
 """
 
+status_text = """
+vcs status - Base command to print status
+"""
+
 log_text = """
 vcs log - Print last commit log
 vcs log -a | --all - Print all commits
@@ -90,11 +94,17 @@ def commit_help():
 def reset_help():
     print(reset_text)
 
+
 def rollback_help():
     print(rollback_text)
 
+
 def ignore_help():
     print(ignore_text)
+
+
+def status_help():
+    print(status_text)
 
 
 def log_help():
