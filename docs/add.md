@@ -1,8 +1,10 @@
 # Add command
 
 ## Add files
+
 \
 Add all files in current folder to tracked list
+
 ```shell
 ~ python vcs.py add .
 
@@ -10,7 +12,9 @@ Found 3 ignores
 12 were added to tracked list
 Files were successfully added to tracked list
 ```
+
 or
+
 ```shell
 ~ python vcs.py add -A
 
@@ -18,8 +22,10 @@ Found 3 ignores
 12 were added to tracked list
 Files were successfully added to tracked list
 ```
+
 \
 Add one file from current folder to traked list
+
 ```shell
 ~ python vcs.py add file_name.example
 
@@ -27,8 +33,10 @@ Found 3 ignores
 1 was added to tracked list
 Files were successfully added to tracked list
 ```
+
 \
 Add files and be verbose
+
 ```shell
 ~ python vcs.py add . -v
 
@@ -42,8 +50,10 @@ Added files:
 4 were added to tracked list
 Files were successfully added to tracked list
 ```
+
 \
 Disregard .ignore file
+
 ```shell
 ~ python vcs.py add . -v -f
 Force mode. .ignore file will not be read
@@ -63,7 +73,6 @@ Files were successfully added to tracked list
 ___
 
 ## Print current tracked files list
-
 
 ```shell
 ~ python vcs.py add -l
@@ -85,6 +94,7 @@ Traking files:
 ___
 
 ## Help message:
+
 ```shell
 vcs add <file_name> | . | -A
     . = -A - Add all files in current directory to tracked files list

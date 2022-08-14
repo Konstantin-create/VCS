@@ -1,6 +1,7 @@
 # Log command
 
 Print last commit log
+
 ```shell
 ~ python vcs.py log
     Commit: 39458c22432915f28ca4f99e5fa29a8e7b9b65c74d5b3a4c76b86de24f82ee1b
@@ -8,8 +9,10 @@ Print last commit log
     Time stamp: 2022-08-09 18:06:39.970791
     Parent: None
 ```
+
 \
 Print commit by commit hash
+
 ```shell
 ~ python vcs.py log <commit_hash>
     Commit: 39458c22432915f28ca4f99e5fa29a8e7b9b65c74d5b3a4c76b86de24f82ee1b
@@ -17,8 +20,10 @@ Print commit by commit hash
     Time stamp: 2022-08-09 18:06:39.970791
     Parent: None
 ```
+
 \
 Print all commits in dir
+
 ```shell
 ~ python vcs.py log -a
 
@@ -28,8 +33,10 @@ Print all commits in dir
 
 Total 3 commits found
 ```
+
 \
 Print all commits in dir in verbose mode
+
 ```shell
 ~ python vcs.py log -a -v
 
@@ -56,13 +63,16 @@ Parent: Null
 
 Total 5 commits found
 ```
+
 ## Help message
+
 ```shell
 
 vcs log - Print last commit log
     -a | --all - Print all commits
     -v | --verbose - Be verbose
 ```
+
 ___
 
 Author: [Konstantin-create](https://github.com/Konstantin-create)

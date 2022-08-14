@@ -17,12 +17,14 @@ init(autoreset=True)
 
 class Log:
     """Class of log command"""
+    __slots__ = 'working_dir'
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir
 
     def get_commit_info(self, commit_hash: str = '') -> None:
         """Function to get commit info by hash or get last commit info"""
+
         if commit_hash == '':
             if not last_commit_hash(self.working_dir):
                 print(Fore.RED + 'You have no commits in this dir')
@@ -54,6 +56,7 @@ class Log:
 
     def get_all_commits(self, verbose: bool) -> None:
         """Function to print all of commits"""
+
         if not last_commit_hash(self.working_dir):
             print(Fore.RED + 'You have no commits in this dir')
             return

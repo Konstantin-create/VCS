@@ -20,6 +20,7 @@ init(autoreset=True)
 
 class Rollback:
     """Class of rollback command"""
+    __slots__ = ('working_dir', 'vcs_path', 'branch_name', 'last_commit_hash', 'previous_commit_hash', 'tracked_files')
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir
@@ -30,7 +31,8 @@ class Rollback:
         self.tracked_files = get_tracked_files(self.working_dir)
 
     def rollback(self, verbose: bool = False):
-        """Function to rollback last commit"""
+        """Function to roll back last commit"""
+
         if not self.previous_commit_hash:
             print(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json not exists!')
         if self.previous_commit_hash == self.branch_name:
@@ -76,7 +78,7 @@ class Rollback:
                 print(f'    File name: {list(file.keys())[0]}')
                 print(f'    File data hash: {file[list(file.keys())[0]][1]}')
                 print()
- 
+
         self.recovery_files(changes)
         self.rollback_commit(changes)
         print()
@@ -122,6 +124,7 @@ class Rollback:
 
     def recovery_files(self, changes: list) -> None:
         """Function to rewrite all files"""
+
         for file in self.tracked_files:
             if os.path.exists(f'{self.working_dir}/{list(file.keys())[0]}'):
                 os.remove(f'{self.working_dir}/{list(file.keys())[0]}')
@@ -130,9 +133,10 @@ class Rollback:
                 f'{self.vcs_path}/objects/{file[list(file.keys())[0]][0]}/{file[list(file.keys())[0]][1]}',
                 f'{self.working_dir}/{list(file.keys())[0]}'
             )
-    
+
     def rollback_commit(self, changes: list) -> None:
         """Function to create rollback commit"""
+
         commit_changes = []
         for file in changes:
             file_name = list(file.keys())[0]
@@ -150,4 +154,3 @@ class Rollback:
                 json.dump(commit_info, file)
         else:
             print(Fore.RED + 'Repo is already up to date')
-

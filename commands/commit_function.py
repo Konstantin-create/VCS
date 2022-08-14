@@ -26,6 +26,7 @@ init(autoreset=True)
 
 class Commit:
     """Commit class"""
+    __slots__ = ('working_dir', 'vcs_path', 'message', 'last_commit', 'branch_name')
 
     def __init__(self, working_dir: str, message: str):
         self.working_dir = working_dir
@@ -36,6 +37,7 @@ class Commit:
 
     def commit(self) -> None:
         """Commit function"""
+
         if self.last_commit != '':
             self.initial_commit()
             return
@@ -43,6 +45,7 @@ class Commit:
 
     def initial_commit(self, hard_commit=False):
         """Initial commit function"""
+
         created_objects = self.get_changes()
         if not len(created_objects):
             sys.exit()
@@ -63,6 +66,7 @@ class Commit:
 
     def child_commit(self):
         """Child commit function"""
+
         created_objects = self.get_changes()
         if not len(created_objects):
             sys.exit()
@@ -79,6 +83,7 @@ class Commit:
 
     def hard_commit(self):
         """Hard commit function(remove previous changes)"""
+
         if is_vcs_initialized(self.working_dir):
             if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}'):
                 shutil.rmtree(f'{self.vcs_path}/commits/{self.branch_name}')
@@ -92,6 +97,7 @@ class Commit:
     # Get block
     def get_tracked_files(self) -> list:
         """Function to get list of tracked files"""
+
         if not os.path.exists(self.vcs_path + '/tracked_files.json'):
             print(Fore.RED + 'No tracked files found try "vcs add <file_name> | -A | ."')
             sys.exit()
@@ -99,6 +105,7 @@ class Commit:
 
     def remove_tracked_file(self, filename: str) -> None:
         """Function to remove file from tracked list"""
+
         current_tracked = self.get_tracked_files()
         for file in current_tracked:
             if filename in file:
@@ -107,6 +114,7 @@ class Commit:
 
     def get_changes(self) -> list:
         """Function to get path to changed files"""
+
         if not os.path.exists(self.vcs_path + '/objects'):
             print(Fore.RED + '.vcs/objects directory not found. Try "vcs init"')
             sys.exit()
@@ -137,8 +145,8 @@ class Commit:
 
     # Create block
     def create_commit_dir(self, commit_hash, commit_info):
-        print('Create commit dir function')
         """Create commit dir and commit_info file"""
+
         if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}'):
             print(Fore.RED + 'Repo is already up to date')
             sys.exit()
@@ -148,6 +156,7 @@ class Commit:
 
     def create_commit_info(self, changes: list) -> dict:
         """Function to generate commit info"""
+
         return {
             'message': self.message,
             'changes': changes,

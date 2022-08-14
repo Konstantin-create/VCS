@@ -1,4 +1,5 @@
 # Commit command
+
 <br>
 Output from commit command have some color indications:
 
@@ -15,7 +16,9 @@ Base commit example
 [master 815567] Initial commit
  1 have been objects created
 ```
+
 Commit with remove commits history
+
 ```shell
 ~ python vcs.py commit -t "Hard reset commit" --hard
 [main 9c4138] Hard reset commit

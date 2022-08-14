@@ -19,6 +19,7 @@ init(autoreset=True)
 
 class Init:
     """Class to init vcs working tree"""
+    __slots__ = ('run_path', 'branch_name', 'quiet')
 
     def __init__(self, run_path: str, base_branch: str = 'master', quiet: bool = False):
         self.run_path = run_path
@@ -30,6 +31,7 @@ class Init:
 
     def create_vcs_dir(self) -> None:
         """Function to create .vcs dir in working dir"""
+
         if os.path.exists(f'{self.run_path}/.vcs'):
             print(Fore.YELLOW + 'In this directory, the version control system is already initialized')
             command = input('Recreate .vcs folder? yes/No: ').strip().lower()
@@ -43,6 +45,7 @@ class Init:
 
     def create_folders(self) -> None:
         """Function to create base folders for .vcs init. Create .vcs/ working tree"""
+
         os.mkdir(self.run_path + '/.vcs')
         os.mkdir(self.run_path + '/.vcs/commits')
         os.mkdir(self.run_path + '/.vcs/commits/' + self.branch_name)
@@ -51,6 +54,7 @@ class Init:
     def create_config(self, main_branch: str) -> None:
         """Function to create config files in root of .vcs/.
             Where im going to save current branch and list of branch names"""
+
         if not self.quiet:
             print(Fore.YELLOW + f'Set main branch as {self.branch_name}')
         config_data = {main_branch: self.branch_name}

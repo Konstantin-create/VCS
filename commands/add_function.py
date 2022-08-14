@@ -74,7 +74,7 @@ class Add:
 
         with open(self.tracked_files_path, 'w') as file:
             json.dump(not_ignored_files, file, indent=4)
-        
+
         if self.verbose:
             pretty_added_files = ''
             for file in not_ignored_files:

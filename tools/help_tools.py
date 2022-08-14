@@ -8,7 +8,6 @@ Functions:
 """
 
 # Vars with help text
-
 vcs_text = """
 vcs init - Initial command
 vcs add - Command to add files in tracked list
