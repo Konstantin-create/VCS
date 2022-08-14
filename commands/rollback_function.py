@@ -15,7 +15,7 @@ from tools import last_commit_hash, previous_commit_hash, decode_file, generate_
 from tools import get_branch_name, get_tracked_files
 
 # Colorama init
-init()
+init(autoreset=True)
 
 
 class Rollback:

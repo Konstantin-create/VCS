@@ -1,3 +1,4 @@
+# User model class
 class User:
     username: str = ''
     password_hash: str = ''

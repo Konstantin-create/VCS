@@ -1,5 +1,5 @@
 """
-File of commit file
+File of commit function
 Functions:
     - Create commit
         - Create objects from tracked files list
@@ -59,7 +59,7 @@ class Commit:
             print(f'[{self.branch_name} {Fore.RED + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
         else:
             print(f'[{self.branch_name} {Fore.GREEN + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
-        print(f' {len(created_objects)} have been objects created')
+        print(f' {len(created_objects)} object have been created')
 
     def child_commit(self):
         """Child commit function"""
@@ -75,7 +75,7 @@ class Commit:
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
         print(f'[{self.branch_name} {Fore.YELLOW + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
-        print(f' {len(created_objects)} have been objects created')
+        print(f' {len(created_objects)} objects have been created')
 
     def hard_commit(self):
         """Hard commit function(remove previous changes)"""
@@ -97,6 +97,10 @@ class Commit:
             sys.exit()
         return json.load(open(self.vcs_path + '/tracked_files.json'))
 
+    def remove_tracked_file(self, filename: str) -> None:
+        """Function to remove file from tracked list"""
+        current_tracked = self.get_tracked_files()
+
     def get_changes(self) -> list:
         """Function to get path to changed files"""
         if not os.path.exists(self.vcs_path + '/objects'):
@@ -109,14 +113,15 @@ class Commit:
             for key in file:
                 if not os.path.exists(f'{self.vcs_path}/objects/{file[key]}'):
                     os.mkdir(f'{self.vcs_path}/objects/{file[key]}')
-                file_hash = generate_hash(open(f'{self.working_dir}/{key}', 'rb').read())
-                if not os.path.exists(f'{self.vcs_path}/objects/{file[key]}/{file_hash}'):
-                    encode_file(self.working_dir + key, f'{self.vcs_path}/objects/{file[key]}/{file_hash}')
-                    created_objects.append({file[key]: file_hash})
+                if os.path.exists(f'{self.working_dir}/{key}'):
+                    file_hash = generate_hash(open(f'{self.working_dir}/{key}', 'rb').read())
+
+                    if not os.path.exists(f'{self.vcs_path}/objects/{file[key]}/{file_hash}'):
+                        encode_file(self.working_dir + key, f'{self.vcs_path}/objects/{file[key]}/{file_hash}')
+                        created_objects.append({file[key]: file_hash})
         if not len(created_objects):
             print(Fore.YELLOW + 'Repo is already up to date')
         return created_objects
-
 
     # Create block
     def create_commit_dir(self, commit_hash, commit_info):

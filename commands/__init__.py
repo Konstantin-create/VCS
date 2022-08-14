@@ -5,4 +5,5 @@ from .ignore_function import *
 from .log_function import *
 from .reset_function import *
 from .rollback_function import *
+from .status_function import *
 
