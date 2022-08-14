@@ -29,9 +29,18 @@ class Status:
         """Function to print vcs status"""
         print(f'On branch {Fore.YELLOW + self.branch_name}')
         print()
-        self.get_changes()
+        changes = self.get_changes()
+        if changes['deleted']:
+            print('Deleted:')
+            print('  ' + '  '.join(changes['deleted']))
+            print()
+        if changes['modified']:
+            print('Changes:')
+            print('  ' + '  '.join(changes['modified']))
+        else:
+            print(Fore.YELLOW + 'Nothing to commit')
 
-    def get_changes(self) -> list:
+    def get_changes(self) -> dict:
         """Function to get changes"""
         deleted = []
         modified = []
@@ -45,6 +54,4 @@ class Status:
                 if not os.path.exists(f'{self.vcs_path}/objects/{tracked_file[filename]}/{file_data}'):
                     modified.append(filename)
 
-        print(
-            {'modified': modified, 'deleted': deleted}
-        )
+        return {'modified': modified, 'deleted': deleted}

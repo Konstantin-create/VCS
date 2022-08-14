@@ -4,4 +4,5 @@ class User:
     password_hash: str = ''
     added_data: str = ''
 
+# Create user
 user = User(username='Konstantin-create', '<password_hash>')
