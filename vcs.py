@@ -136,6 +136,14 @@ def main():
                 verbose = True
             rollback = Rollback(cwd)
             rollback.rollback(verbose)
+
+        elif args[1].lower() == 'status':
+            if '-h' in args or '--help' in args:
+                status_help()
+                return
+            status = Status(cwd)
+            status.status()
+
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
             

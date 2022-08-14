@@ -1,0 +1,10 @@
+{
+    "message": "Remove license",
+    "changes": [
+        {
+            "12de9234cb2d3793b126aba8704eacc890a685f6f163b6c1a784afd1f9f26b48": "35cf506812dca3aaa53a351253c8d569f3bb64ebd1a3a54b4c7ee7f180c240e0"
+        }
+    ],
+    "time_stamp": "2022-08-14 13:57:55.743984",
+    "parent": "3f295f940632bcf145ffca60188f2d7bb9690b9e3fd039180cf53a898abe4111"
+}
