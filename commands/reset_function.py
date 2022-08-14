@@ -21,14 +21,15 @@ init(autoreset=True)
 
 class Reset:
     """Class of reset command"""
+    __slots__ = ('working_dir', 'vcs_path', 'branch_name', 'last_commit_hash', 'tracked_files', 'previous_commit_hash')
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir
         self.vcs_path = f'{working_dir}/.vcs'
         self.branch_name = get_branch_name(self.working_dir)
         self.last_commit_hash = last_commit_hash(self.working_dir)
-        self.tracked_files = get_tracked_files(self.working_dir)
         self.previous_commit_hash = previous_commit_hash(self.vcs_path, self.branch_name, self.last_commit_hash)
+        self.tracked_files = get_tracked_files(self.working_dir)
 
     def last_commit(self, verbose: bool = False) -> None:
         """Function to reset last commit"""
@@ -118,6 +119,7 @@ class Reset:
 
     def recovery_files(self, changes: list) -> None:
         """Function to rewrite all files"""
+
         for file in self.tracked_files:
             if os.path.exists(f'{self.working_dir}/{list(file.keys())[0]}'):
                 os.remove(f'{self.working_dir}/{list(file.keys())[0]}')

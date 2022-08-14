@@ -5,27 +5,29 @@ Functions:
 """
 
 python = \
-'''# Python ignores
-# Cache
-__pycache__
-
-# Enviroments
-venv/
-env/
-.venv/
-.env/
-
-# Pyinstaller
-.spec
-.manifest
-'''
+    '''# Python ignores
+    # Cache
+    __pycache__
+    
+    # Enviroments
+    venv/
+    env/
+    .venv/
+    .env/
+    
+    # Pyinstaller
+    .spec
+    .manifest
+    '''
 
 templates = {
     'python': python
 }
 
-def get_ignore_template(template: str) -> str:
+
+def get_ignore_template(template: str) -> str | None:
     """Get ignore template by name"""
+
     if template not in templates:
         return None
     return templates[template]

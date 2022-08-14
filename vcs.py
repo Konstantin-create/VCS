@@ -7,13 +7,11 @@ Functions:
 """
 
 # Imports
-from ast import arg
-from tools import is_vcs_initialized
+from commands import *
 from tools.help_tools import *
 from tools.flags_tools import *
-from commands import *
 from colorama import init, Fore
-
+from tools import is_vcs_initialized
 from tools.help_tools import log_help
 
 # Colorama init
@@ -26,6 +24,7 @@ args = sys.argv
 # Functions
 def main():
     """Function to parse args and call the function"""
+    
     cwd = os.getcwd()
     if args[1].lower() == 'init':
         quiet = False
@@ -149,7 +148,7 @@ def main():
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
-            
+
         else:
             print(Fore.RED + f'No such command {args[1]}')
 

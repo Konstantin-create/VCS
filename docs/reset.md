@@ -1,12 +1,19 @@
 # Reset command
 
 ### Difference between rollback and reset
-All the difference between these commands lies in the way of "rollback". In the case of reset, we get the last saved objects for files from the tracked list, delete the last commit and overwrite the files. In the case of a rollback, we also get the last saved objects for files from the tracked list, but we do not delete the last commit, but create a new one.
+
+All the difference between these commands lies in the way of "rollback". In the case of reset, we get the last saved
+objects for files from the tracked list, delete the last commit and overwrite the files. In the case of a rollback, we
+also get the last saved objects for files from the tracked list, but we do not delete the last commit, but create a new
+one.
 \
 Note: reset is recommended if you want to undo an accidental commit without polluting the commit branch
 ___
+
 ## Commands list
+
 Base reset command
+
 ```shell
 ~ python vcs.py reset
 Rollback to commit 6ab6a9dbb43097b2d0a8737ce37f42e6419cca3b77dc1faabfa7ca2d816373ec
@@ -14,8 +21,10 @@ Changes to rewrite: 4
 
 Lucky rollback
 ```
+
 \
 Reset command in verbose mode
+
 ```shell
 Rollback to commit 6ab6a9dbb43097b2d0a8737ce37f42e6419cca3b77dc1faabfa7ca2d816373ec
 Changes to rewrite: 4
@@ -36,6 +45,7 @@ Lucky rollback
 ```
 
 ## Help message
+
 ```shell
 vcs reset - Reset to last commit
 vcs reset -v | --verbose - Reset to last commit in verbose mode

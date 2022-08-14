@@ -17,6 +17,7 @@ init(autoreset=True)
 
 class Status:
     """Class of status command"""
+    __slots__ = ('working_dir', 'vcs_path', 'branch_name', 'last_commit_hash', 'tracked_files')
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir
@@ -27,6 +28,7 @@ class Status:
 
     def status(self):
         """Function to print vcs status"""
+
         print(f'On branch {Fore.YELLOW + self.branch_name}')
         print()
         changes = self.get_changes()
@@ -42,6 +44,7 @@ class Status:
 
     def get_changes(self) -> dict:
         """Function to get changes"""
+
         deleted = []
         modified = []
         for tracked_file in self.tracked_files:

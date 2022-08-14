@@ -1,7 +1,9 @@
 # Rollback command
 
 # Commands list
+
 Base rollback command
+
 ```shell
 python vcs.py rollback
 Current commit: 8f4804cb84592f332a85cf5305222de3cf22d6ca0ff23020001a8b949b52f450
@@ -11,8 +13,10 @@ Changes to rewrite: 4
 
 Lucky rollback
 ```
+
 \
 Rollback in verbose mode
+
 ```shell
 Current commit: 8f4804cb84592f332a85cf5305222de3cf22d6ca0ff23020001a8b949b52f450
 Rollback to commit: 6ab6a9dbb43097b2d0a8737ce37f42e6419cca3b77dc1faabfa7ca2d816373ec
@@ -45,12 +49,15 @@ Changes to rewrite: 4
 
 Lucky rollback
 ```
+
 ## Help message
+
 ```shell
 vcs rollback - Rollback to last commit
 vcs rollback -v | --verbose - Rollback to last commit in verbose mode
 vcs reset -h | --help - This help
 ```
+
 ___
 
 Author: [Konstantin-create](https://github.com/Konstantin-create)
