@@ -24,7 +24,7 @@ args = sys.argv
 # Functions
 def main():
     """Function to parse args and call the function"""
-    
+
     cwd = os.getcwd()
     if args[1].lower() == 'init':
         quiet = False
@@ -145,6 +145,10 @@ def main():
                 return
             status = Status(cwd)
             status.status()
+
+        elif args[1].lower() == 'checkout':
+            checkout = CheckOut(cwd)
+            print(checkout.create_commit('features'))
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
