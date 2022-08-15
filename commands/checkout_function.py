@@ -9,6 +9,7 @@ Functions:
 import os
 import sys
 import json
+from datetime import datetime
 from colorama import init, Fore
 from tools import get_branch_name, last_commit_hash, get_tracked_files
 
@@ -55,12 +56,41 @@ class CheckOut:
 
         os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
 
-    def create_commit(self) -> dict:
+    def create_commit(self, new_branch_name: str) -> dict:
         """Function to create first commit in a new branch"""
 
-        files_to_found = self.tracked_files  # List of files which last version we find in commit tree
+        files_to_found = []  # List of files which last version we find in commit tree
+        changes = []  # List of last version hashes like [{'<filename_hash>': '<file_data_hash>'}, ...]
+        for file in self.tracked_files:
+            files_to_found.append(file[list(file.keys())[0]])
         current_commit = self.last_commit_hash
+
         while True:
             commit_info_path = f'{self.vcs_path}/commits/{self.current_branch}/{current_commit}/commit_info.json'
             if os.path.exists(commit_info_path):
                 commit_info = json.load(open(commit_info_path, 'r'))
+
+                for filename_to_find in files_to_found:
+                    for bin_file in commit_info['changes']:
+                        if filename_to_find in bin_file:
+                            changes.append({filename_to_find: bin_file[filename_to_find]})
+                            files_to_found.remove(filename_to_find)
+
+            else:
+                print(Fore.RED + 'Commit storage error')
+                sys.exit()
+
+            if commit_info['parent'] == self.current_branch:
+                if len(files_to_found) != 0:
+                    print(Fore.RED + 'Commit storage error')
+                    print(Fore.RED + f'Elements {files_to_found} not found')
+                    sys.exit()
+                break
+            current_commit = commit_info['parent']
+
+        return {
+            'message': f'Merged from {self.current_branch}',
+            'changes': changes,
+            'time_stamp': str(datetime.utcnow()),
+            'parent': new_branch_name
+        }

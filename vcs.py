@@ -146,6 +146,10 @@ def main():
             status = Status(cwd)
             status.status()
 
+        elif args[1].lower() == 'checkout':
+            checkout = CheckOut(cwd)
+            print(checkout.create_commit('features'))
+
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
 
