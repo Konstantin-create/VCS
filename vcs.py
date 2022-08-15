@@ -24,7 +24,7 @@ args = sys.argv
 # Functions
 def main():
     """Function to parse args and call the function"""
-    
+
     cwd = os.getcwd()
     if args[1].lower() == 'init':
         quiet = False
