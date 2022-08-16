@@ -11,6 +11,7 @@ import sys
 import json
 from datetime import datetime
 from colorama import init, Fore
+from tools import generate_hash
 from tools import get_branch_name, last_commit_hash, get_tracked_files
 
 # Colorama init
@@ -27,13 +28,20 @@ class CheckOut:
         self.last_commit_hash = last_commit_hash(self.working_dir)
         self.tracked_files = get_tracked_files(self.working_dir)
 
-    def checkout(self, branch_name: str = '') -> None:
+    def checkout(self, branch_name: str = '', create_new_branch: bool = False) -> None:
         """Function to switch branch"""
 
         if branch_name == self.current_branch:
             print(Fore.YELLOW + f'Already on {branch_name}')
             sys.exit()
         self.change_current_branch(branch_name)
+        if not self.is_branch_exists(branch_name) and create_new_branch:
+            os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
+            commit_info = self.create_commit_hash(branch_name)
+            commit_hash = generate_hash(str(commit_info).encode())
+            os.mkdir(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}')
+            json.dump(commit_info, open(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json', 'w'))
+        print(f'Switch to branch {branch_name}')
 
     def is_branch_exists(self, branch_name: str) -> bool:
         """Function to check is branch exists"""
@@ -54,9 +62,7 @@ class CheckOut:
         config_data[branch_name] = ''  # Todo edit commit hash
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
-        os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
-
-    def create_commit(self, new_branch_name: str) -> dict:
+    def create_commit_hash(self, new_branch_name: str) -> dict:
         """Function to create first commit in a new branch"""
 
         files_to_found = []  # List of files which last version we find in commit tree

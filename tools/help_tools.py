@@ -1,10 +1,17 @@
 """
 Tools for print help text in commands
 Functions:
-    - Index command  help text
+    - VCS global help text
+    - Init command  help text
     - Add command help text
     - Commit command help text
+    - Reset command help text
+    - Rollback command help text
+    - Checkout command help text
+
     - Ignore command help text
+    - Status command help text
+    - Log command help text
 """
 
 # Vars with help text
@@ -56,6 +63,10 @@ vcs rollback -v | --verbose - Rollback to last commit in verbose mode
 vcs reset -h | --help - This help
 """
 
+checkout_text = """
+vcs checkout <branch_name>
+"""
+
 ignore_text = """
 vcs ignore 
     -n | --new - Create .ignore file with base ignores
@@ -99,6 +110,10 @@ def reset_help():
 
 def rollback_help():
     print(rollback_text)
+
+
+def checkout_help():
+    print(checkout_text)
 
 
 def ignore_help():
