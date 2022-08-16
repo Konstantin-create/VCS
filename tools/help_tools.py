@@ -21,6 +21,7 @@ vcs add - Command to add files in tracked list
 vcs commit - Command to commit changes
 vcs reset - Command to reset last commit
 vcs rollback - Command to rollback to last commit
+vcs checkout - Switch branches
 vcs ignore - Command to modify ignore file
 vcs log - Command to print info about commits
 vcs status - Command to print current vcs status
@@ -64,7 +65,8 @@ vcs reset -h | --help - This help
 """
 
 checkout_text = """
-vcs checkout <branch_name>
+vcs checkout <branch_name> - Switch branch
+vcs checkout -b <branch_name> - Create branch and switch
 """
 
 ignore_text = """

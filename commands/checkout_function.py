@@ -34,13 +34,19 @@ class CheckOut:
         if branch_name == self.current_branch:
             print(Fore.YELLOW + f'Already on {branch_name}')
             sys.exit()
+        if not self.is_branch_exists(branch_name) and not create_new_branch:
+            print(Fore.RED + f'No such branch {branch_name}. To create a new branch use -b flag. '
+                             f'More in "vcs checkout -h | --help"')
+            return
+
         self.change_current_branch(branch_name)
-        if not self.is_branch_exists(branch_name) and create_new_branch:
+        if not self.is_branch_exists(branch_name):
             os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
             commit_info = self.create_commit_hash(branch_name)
             commit_hash = generate_hash(str(commit_info).encode())
             os.mkdir(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}')
             json.dump(commit_info, open(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json', 'w'))
+            self.edit_config(branch_name, commit_hash)
         print(f'Switch to branch {branch_name}')
 
     def is_branch_exists(self, branch_name: str) -> bool:
@@ -59,8 +65,16 @@ class CheckOut:
         config_data = {}
         if os.path.exists(f'{self.vcs_path}/config.json'):
             config_data = json.load(open(f'{self.vcs_path}/config.json', 'r'))
-        config_data[branch_name] = ''  # Todo edit commit hash
+        if branch_name not in config_data:
+            config_data[branch_name] = ''  # Todo edit commit hash
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
+
+    def edit_config(self, branch_name: str, commit_hash: str):
+        """Function to set commit hash in config"""
+
+        current_config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
+        current_config[branch_name] = commit_hash
+        json.dump(current_config, open(f'{self.vcs_path}/config.json', 'w'))
 
     def create_commit_hash(self, new_branch_name: str) -> dict:
         """Function to create first commit in a new branch"""
@@ -80,14 +94,12 @@ class CheckOut:
                     for bin_file in commit_info['changes']:
                         if filename_to_find in bin_file:
                             changes.append({filename_to_find: bin_file[filename_to_find]})
-                            files_to_found.remove(filename_to_find)
-
             else:
                 print(Fore.RED + 'Commit storage error')
                 sys.exit()
 
             if commit_info['parent'] == self.current_branch:
-                if len(files_to_found) != 0:
+                if len(files_to_found) != len(changes):
                     print(Fore.RED + 'Commit storage error')
                     print(Fore.RED + f'Elements {files_to_found} not found')
                     sys.exit()

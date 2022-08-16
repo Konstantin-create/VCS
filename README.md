@@ -30,8 +30,10 @@ ___
     - [Commit](/docs/commit.md)
     - [Reset](/docs/reset.md)
     - [Rollback](/docs/rollback.md)
+    - [Checkout](/docs/checkout.md)
     - [Status](/docs/status.md)
     - [Log](/docs/log.md)
+    - [Ignore](/docs/ignore.md)
 ___
 
 Author: [Konstantin-create](https://github.com/Konstantin-create)

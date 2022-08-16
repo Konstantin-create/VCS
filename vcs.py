@@ -171,7 +171,7 @@ def main():
                 return
 
             checkout = CheckOut(cwd)
-            checkout.checkout(branch_name, create_new_branch = False)
+            checkout.checkout(branch_name, create_new_branch=create_new)
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
