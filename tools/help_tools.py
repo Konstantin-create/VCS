@@ -69,6 +69,11 @@ vcs checkout <branch_name> - Switch branch
 vcs checkout -b <branch_name> - Create branch and switch
 """
 
+branch_text = """
+vcs branch - Print list of branches
+vcs branch -l | --list - Print list of branches
+"""
+
 ignore_text = """
 vcs ignore 
     -n | --new - Create .ignore file with base ignores
@@ -116,6 +121,10 @@ def rollback_help():
 
 def checkout_help():
     print(checkout_text)
+
+
+def branch_help():
+    print(branch_text)
 
 
 def ignore_help():

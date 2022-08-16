@@ -26,6 +26,10 @@ def main():
     """Function to parse args and call the function"""
 
     cwd = os.getcwd()
+    if not len(args) - 1:
+        vcs_help()
+        return
+
     if args[1].lower() == 'init':
         quiet = False
         if '-quiet' in args or '-q' in args:
@@ -172,6 +176,24 @@ def main():
 
             checkout = CheckOut(cwd)
             checkout.checkout(branch_name, create_new_branch=create_new)
+
+        elif args[1] == 'branch':
+            if '-h' in args or '--help' in args:
+                branch_help()
+                return
+            branch = Branch(cwd)
+            if '-l' in args or '--list' in args or len(args) == 2:
+                branch.branches_list()
+                return
+            elif '-n' in args or '--new' in args:
+                if '-n' in args:
+                    command_flag = '-n'
+                else:
+                    command_flag = '--new'
+                if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
+                    print(Fore.RED + 'Branch name not found')
+                    return
+                branch.create_new(args[args.index(command_flag) + 1])
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()

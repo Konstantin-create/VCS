@@ -20,6 +20,7 @@ init(autoreset=True)
 
 class CheckOut:
     """Function of checkout command"""
+    __slots__ = ('working_dir', 'vcs_path', 'current_branch', 'last_commit_hash', 'tracked_files')
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir
@@ -66,7 +67,7 @@ class CheckOut:
         if os.path.exists(f'{self.vcs_path}/config.json'):
             config_data = json.load(open(f'{self.vcs_path}/config.json', 'r'))
         if branch_name not in config_data:
-            config_data[branch_name] = ''  # Todo edit commit hash
+            config_data[branch_name] = ''
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
     def edit_config(self, branch_name: str, commit_hash: str):
