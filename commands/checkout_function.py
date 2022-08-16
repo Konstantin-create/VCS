@@ -11,6 +11,7 @@ import sys
 import json
 from datetime import datetime
 from colorama import init, Fore
+from tools import generate_hash
 from tools import get_branch_name, last_commit_hash, get_tracked_files
 
 # Colorama init
@@ -27,13 +28,26 @@ class CheckOut:
         self.last_commit_hash = last_commit_hash(self.working_dir)
         self.tracked_files = get_tracked_files(self.working_dir)
 
-    def checkout(self, branch_name: str = '') -> None:
+    def checkout(self, branch_name: str = '', create_new_branch: bool = False) -> None:
         """Function to switch branch"""
 
         if branch_name == self.current_branch:
             print(Fore.YELLOW + f'Already on {branch_name}')
             sys.exit()
+        if not self.is_branch_exists(branch_name) and not create_new_branch:
+            print(Fore.RED + f'No such branch {branch_name}. To create a new branch use -b flag. '
+                             f'More in "vcs checkout -h | --help"')
+            return
+
         self.change_current_branch(branch_name)
+        if not self.is_branch_exists(branch_name):
+            os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
+            commit_info = self.create_commit_hash(branch_name)
+            commit_hash = generate_hash(str(commit_info).encode())
+            os.mkdir(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}')
+            json.dump(commit_info, open(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json', 'w'))
+            self.edit_config(branch_name, commit_hash)
+        print(f'Switch to branch {branch_name}')
 
     def is_branch_exists(self, branch_name: str) -> bool:
         """Function to check is branch exists"""
@@ -51,12 +65,18 @@ class CheckOut:
         config_data = {}
         if os.path.exists(f'{self.vcs_path}/config.json'):
             config_data = json.load(open(f'{self.vcs_path}/config.json', 'r'))
-        config_data[branch_name] = ''  # Todo edit commit hash
+        if branch_name not in config_data:
+            config_data[branch_name] = ''  # Todo edit commit hash
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
-        os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
+    def edit_config(self, branch_name: str, commit_hash: str):
+        """Function to set commit hash in config"""
 
-    def create_commit(self, new_branch_name: str) -> dict:
+        current_config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
+        current_config[branch_name] = commit_hash
+        json.dump(current_config, open(f'{self.vcs_path}/config.json', 'w'))
+
+    def create_commit_hash(self, new_branch_name: str) -> dict:
         """Function to create first commit in a new branch"""
 
         files_to_found = []  # List of files which last version we find in commit tree
@@ -74,14 +94,12 @@ class CheckOut:
                     for bin_file in commit_info['changes']:
                         if filename_to_find in bin_file:
                             changes.append({filename_to_find: bin_file[filename_to_find]})
-                            files_to_found.remove(filename_to_find)
-
             else:
                 print(Fore.RED + 'Commit storage error')
                 sys.exit()
 
             if commit_info['parent'] == self.current_branch:
-                if len(files_to_found) != 0:
+                if len(files_to_found) != len(changes):
                     print(Fore.RED + 'Commit storage error')
                     print(Fore.RED + f'Elements {files_to_found} not found')
                     sys.exit()

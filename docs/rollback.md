@@ -1,7 +1,5 @@
 # Rollback command
 
-# Commands list
-
 Base rollback command
 
 ```shell

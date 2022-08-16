@@ -147,8 +147,31 @@ def main():
             status.status()
 
         elif args[1].lower() == 'checkout':
+            if '-h' in args or '--help' in args:
+                checkout_help()
+                return
+
+            branch_name = ''
+            create_new = False
+            if len(args) >= 3 and args[2] not in checkout_flags:  # todo: rewrite on switch cases
+                branch_name = args[2]
+            elif '-b' in args or '--branch' in args:
+                if '-b' in args:
+                    branch_flag = '-b'
+                else:
+                    branch_flag = '--branch'
+
+                if len(args) <= args.index(branch_flag):
+                    print(Fore.RED + 'No branch name found. Try "vcs checkout -h | --help"')
+                    return
+                branch_name = args[args.index(branch_flag) + 1]
+                create_new = True
+            if not len(branch_name):
+                print(Fore.RED + 'No branch name found. Try "vcs checkout -h | --help"')
+                return
+
             checkout = CheckOut(cwd)
-            print(checkout.create_commit('features'))
+            checkout.checkout(branch_name, create_new_branch=create_new)
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
