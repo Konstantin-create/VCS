@@ -30,9 +30,11 @@ class Log:
                 print(Fore.RED + 'You have no commits in this dir')
                 return
             if os.path.exists(
-                    f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{last_commit_hash(self.working_dir)}/commit_info.json'):
+                    f'{self.working_dir}/.vcs/commits/'
+                    f'{get_branch_name(self.working_dir)}/{last_commit_hash(self.working_dir)}/commit_info.json'):
                 with open(
-                        f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{last_commit_hash(self.working_dir)}/commit_info.json',
+                        f'{self.working_dir}/.vcs/commits/'
+                        f'{get_branch_name(self.working_dir)}/{last_commit_hash(self.working_dir)}/commit_info.json',
                         'r') as file:
                     commit_info = json.load(file)
                 print(f'Commit: {last_commit_hash(self.working_dir)}')
@@ -42,9 +44,11 @@ class Log:
                 print()
         else:
             if os.path.exists(
-                    f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{commit_hash}/commit_info.json'):
+                    f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
+                    f'{commit_hash}/commit_info.json'):
                 with open(
-                        f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{commit_hash}/commit_info.json') as file:
+                        f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
+                        f'{commit_hash}/commit_info.json') as file:
                     commit_info = json.load(file)
                 print(f'Commit: {commit_hash}')
                 print(f'Message: {commit_info["message"]}')
@@ -79,9 +83,11 @@ class Log:
                         if last_commit['parent'] == get_branch_name(self.working_dir):
                             if verbose:
                                 if os.path.exists(
-                                        f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{previous_commit}/commit_info.json'):
+                                        f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
+                                        f'{previous_commit}/commit_info.json'):
                                     with open(
-                                            f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/{previous_commit}/commit_info.json') as file:
+                                            f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
+                                            f'{previous_commit}/commit_info.json') as file:
                                         commit_info = json.load(file)
                                     print(f'Commit: {Fore.YELLOW + previous_commit + Fore.WHITE} - Initial commit')
                                     print(f'Message: {commit_info["message"]}')

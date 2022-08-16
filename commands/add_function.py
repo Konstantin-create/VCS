@@ -19,8 +19,8 @@ init(autoreset=True)
 
 
 class Add:
-    __slots__ = ('run_path', 'tracked_files_path', 'verbose', 'force')
     """Class to manage tracked files list"""
+    __slots__ = ('run_path', 'tracked_files_path', 'verbose', 'force')
 
     def __init__(self, run_path) -> None:
         self.run_path = run_path
