@@ -11,8 +11,8 @@ import sys
 import json
 from datetime import datetime
 from colorama import init, Fore
-from tools import generate_hash
-from tools import get_branch_name, last_commit_hash, get_tracked_files
+from tools import generate_hash, decode_file
+from tools import get_branch_name, last_commit_hash, get_tracked_files, get_changes, branch_last_commit
 
 # Colorama init
 init(autoreset=True)
@@ -40,8 +40,7 @@ class CheckOut:
                              f'More in "vcs checkout -h | --help"')
             return
 
-        self.change_current_branch(branch_name)
-        if not self.is_branch_exists(branch_name):
+        if not self.is_branch_exists(branch_name) and create_new_branch:
             os.mkdir(f'{self.vcs_path}/commits/{branch_name}')
             commit_info = self.create_commit_hash(branch_name)
             commit_hash = generate_hash(str(commit_info).encode())
@@ -49,6 +48,20 @@ class CheckOut:
             json.dump(commit_info, open(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json', 'w'))
             self.edit_config(branch_name, commit_hash)
         print(f'Switch to branch {branch_name}')
+        self.change_current_branch(branch_name)
+        changes = get_changes(
+            self.working_dir, branch_name, self.tracked_files, branch_last_commit(self.working_dir, branch_name)
+        )
+
+        for file in changes:
+            filename_hash = list(file.keys())[0]
+            for filename in self.tracked_files:
+                if filename[list(filename.keys())[0]] == filename_hash:
+                    filename = list(filename.keys())[0]
+                    decode_file(
+                        f'{self.vcs_path}/objects/{filename_hash}/{file[filename_hash]}', f'{self.working_dir}/{filename}'
+                    )
+                    break
 
     def is_branch_exists(self, branch_name: str) -> bool:
         """Function to check is branch exists"""
@@ -67,7 +80,7 @@ class CheckOut:
         if os.path.exists(f'{self.vcs_path}/config.json'):
             config_data = json.load(open(f'{self.vcs_path}/config.json', 'r'))
         if branch_name not in config_data:
-            config_data[branch_name] = ''
+            config_data[branch_name] = branch_last_commit(self.working_dir, branch_name)
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
     def edit_config(self, branch_name: str, commit_hash: str):
