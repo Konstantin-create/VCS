@@ -198,6 +198,8 @@ def main():
 
             elif '-d' in args or '--delete' in args:
                 command_flag = ''
+                force = False
+
                 if '-d' in args:
                     command_flag = '-d'
                 else:
@@ -206,7 +208,9 @@ def main():
                 if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
                     print(Fore.RED + 'Branch name not found')
                     return
-                branch.remove_branch(args[args.index(command_flag) + 1])
+                if '-f' in args or '--force' in args:
+                    force = True
+                branch.remove_branch(args[args.index(command_flag) + 1], force=force)
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()

@@ -21,12 +21,15 @@ Create new branch
 Branch test has been created
 4 files were inherited
 ```
+
 \
 Remove branch by name
+
 ```shell
 ~ python vcs.py -d test
 Branch test was successfully deleted
 ```
+
 ___
 
 ## Help text

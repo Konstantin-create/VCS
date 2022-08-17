@@ -14,7 +14,7 @@ from datetime import datetime
 from colorama import init, Fore
 from tools import generate_hash
 from tools import get_branch_name, get_branches
-from tools import last_commit_hash, get_tracked_files
+from tools import last_commit_hash, get_tracked_files, get_changes
 
 # Colorama init
 init(autoreset=True)
@@ -52,7 +52,7 @@ class Branch:
         print()
         print(f'Total {len(self.branches)} branches')
 
-    def remove_branch(self, branch_name: str) -> None:
+    def remove_branch(self, branch_name: str, force: bool) -> None:
         """Function to remove branch"""
 
         if len(branch_name) <= 1:
@@ -65,12 +65,46 @@ class Branch:
             print(Fore.RED + f'Branch {branch_name} not found')
             sys.exit()
 
+        if force:  # Force mode removing
+            self.remove_branch_force(branch_name)
+            return
+        self.remove_branch_default(branch_name)
+
+    def remove_branch_force(self, branch_name: str) -> None:
+        """Function to remove branch in a force mode"""
+
+        print(Fore.YELLOW + f'Deleting {branch_name} in force mode')
         shutil.rmtree(f'{self.vcs_path}/commits/{branch_name}')
         current_config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
         if branch_name in current_config:
             current_config.pop(branch_name)
             json.dump(current_config, open(f'{self.vcs_path}/config.json', 'w'))
         print(f'Branch {branch_name} was successfully deleted')
+
+    def remove_branch_default(self, branch_name: str) -> None:
+        """Function to remove branch in default mode"""
+
+        config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
+        if branch_name not in config:
+            print(Fore.RED + 'Commit storage error')
+            sys.exit()
+
+        master_changes = get_changes(self.working_dir, self.current_branch, self.tracked_files, self.last_commit_hash)
+        current_changes = get_changes(self.working_dir, branch_name, self.tracked_files, config[branch_name])
+        difference = []
+
+        if not (len(master_changes) == len(current_changes) == len(self.tracked_files)):
+            print(Fore.RED + 'Commit storage error')
+            sys.exit()
+
+        for i in range(len(self.tracked_files)):
+            master_file = master_changes[i]
+            current_file = current_changes[i]
+
+            if master_file[list(master_file.keys())[0]] != current_file[list(current_file.keys())[0]]:
+                difference.append(current_file)
+
+        print(difference)
 
     def is_branch_exists(self, branch_name: str) -> bool:
         """Function check is branch exists"""
@@ -80,32 +114,7 @@ class Branch:
     def create_commit_info(self, new_branch_name: str) -> dict:
         """Function to create first commit in a new branch"""
 
-        files_to_found = []  # List of files which last version we find in commit tree
-        changes = []  # List of last version hashes like [{'<filename_hash>': '<file_data_hash>'}, ...]
-        for file in self.tracked_files:
-            files_to_found.append(file[list(file.keys())[0]])
-        current_commit = self.last_commit_hash
-
-        while True:
-            commit_info_path = f'{self.vcs_path}/commits/{self.current_branch}/{current_commit}/commit_info.json'
-            if os.path.exists(commit_info_path):
-                commit_info = json.load(open(commit_info_path, 'r'))
-
-                for filename_to_find in files_to_found:
-                    for bin_file in commit_info['changes']:
-                        if filename_to_find in bin_file:
-                            changes.append({filename_to_find: bin_file[filename_to_find]})
-            else:
-                print(Fore.RED + 'Commit storage error')
-                sys.exit()
-
-            if commit_info['parent'] == self.current_branch:
-                if len(files_to_found) != len(changes):
-                    print(Fore.RED + 'Commit storage error')
-                    print(Fore.RED + f'Elements {files_to_found} not found')
-                    sys.exit()
-                break
-            current_commit = commit_info['parent']
+        changes = get_changes(self.working_dir, self.current_branch, self.tracked_files, self.last_commit_hash)
 
         return {
             'message': f'Merged from {self.current_branch}',
