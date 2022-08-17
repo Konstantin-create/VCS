@@ -182,6 +182,7 @@ def main():
                 branch_help()
                 return
             branch = Branch(cwd)
+
             if '-l' in args or '--list' in args or len(args) == 2:
                 branch.branches_list()
                 return
@@ -194,6 +195,18 @@ def main():
                     print(Fore.RED + 'Branch name not found')
                     return
                 branch.create_new(args[args.index(command_flag) + 1])
+
+            elif '-d' in args or '--delete' in args:
+                command_flag = ''
+                if '-d' in args:
+                    command_flag = '-d'
+                else:
+                    command_flag = '--delete'
+
+                if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
+                    print(Fore.RED + 'Branch name not found')
+                    return
+                branch.remove_branch(args[args.index(command_flag) + 1])
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()

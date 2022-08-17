@@ -9,12 +9,12 @@ Function:
 import os
 import sys
 import json
+import shutil
 from datetime import datetime
 from colorama import init, Fore
 from tools import generate_hash
 from tools import get_branch_name, get_branches
 from tools import last_commit_hash, get_tracked_files
-
 
 # Colorama init
 init(autoreset=True)
@@ -51,6 +51,26 @@ class Branch:
         print('  ' + '\n  '.join(self.branches))
         print()
         print(f'Total {len(self.branches)} branches')
+
+    def remove_branch(self, branch_name: str) -> None:
+        """Function to remove branch"""
+
+        if len(branch_name) <= 1:
+            print(Fore.YELLOW + 'You can\'t remove the last branch')
+            sys.exit()
+        if self.current_branch == branch_name:
+            print(Fore.YELLOW + 'You can\'t delete the branch you are currently on')
+            sys.exit()
+        if not self.is_branch_exists(branch_name):
+            print(Fore.RED + f'Branch {branch_name} not found')
+            sys.exit()
+
+        shutil.rmtree(f'{self.vcs_path}/commits/{branch_name}')
+        current_config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
+        if branch_name in current_config:
+            current_config.pop(branch_name)
+            json.dump(current_config, open(f'{self.vcs_path}/config.json', 'w'))
+        print(f'Branch {branch_name} was successfully deleted')
 
     def is_branch_exists(self, branch_name: str) -> bool:
         """Function check is branch exists"""

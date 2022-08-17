@@ -22,6 +22,7 @@ vcs commit - Command to commit changes
 vcs reset - Command to reset last commit
 vcs rollback - Command to rollback to last commit
 vcs checkout - Switch branches
+vcs branch - Command to modify branches
 vcs ignore - Command to modify ignore file
 vcs log - Command to print info about commits
 vcs status - Command to print current vcs status
@@ -72,6 +73,8 @@ vcs checkout -b <branch_name> - Create branch and switch
 branch_text = """
 vcs branch - Print list of branches
 vcs branch -l | --list - Print list of branches
+vcs branch -n | --new <branch_name> - Create new branch
+vcs branch -d | --delete <branch_name> - Remove branch
 """
 
 ignore_text = """

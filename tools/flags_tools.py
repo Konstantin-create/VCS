@@ -12,5 +12,5 @@ add_flags = ['-l', '--list', '-h', '--help', '-c', '--clean', '-v', '--verbose',
 commit_flags = ['-t', '--hard', '--HARD', '-h', '--help']
 checkout_flags = ['-b', '--branch', '-h', '--help']
 ignore_flags = ['-n', '--new', '-t', '--template', '-tl', '--template-list']
-branch_flags = ['-l', '--list', '-n', '--new', '-h', '--help']
+branch_flags = ['-l', '--list', '-n', '--new', '-r', '--remove', '-h', '--help']
 
