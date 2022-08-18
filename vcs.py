@@ -11,7 +11,7 @@ from commands import *
 from tools.help_tools import *
 from tools.flags_tools import *
 from colorama import init, Fore
-from tools import is_vcs_initialized
+from tools import is_vcs_initialized, get_ignore
 from tools.help_tools import log_help
 
 # Colorama init
@@ -157,7 +157,7 @@ def main():
 
             branch_name = ''
             create_new = False
-            if len(args) >= 3 and args[2] not in checkout_flags:  # todo: rewrite on switch cases
+            if len(args) >= 3 and args[2] not in checkout_flags:
                 branch_name = args[2]
             elif '-b' in args or '--branch' in args:
                 if '-b' in args:
@@ -211,6 +211,9 @@ def main():
                 if '-f' in args or '--force' in args:
                     force = True
                 branch.remove_branch(args[args.index(command_flag) + 1], force=force)
+
+        elif args[1].lower() == 'test':
+            print(get_ignore(cwd))
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
