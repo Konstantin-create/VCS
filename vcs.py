@@ -49,7 +49,7 @@ def main():
             print(Fore.RED + 'VCS is not initialized try "vcs init"')
             sys.exit()
         if args[1].lower() == 'add':
-            if '--help' in args or '-h' in args:
+            if '--help' in args or '-h' in args or len(args) == 2:
                 add_help()
             else:
                 if len(args) <= args.index('add') + 1:
@@ -71,7 +71,7 @@ def main():
                     add.add_tracked_file(args[args.index('add') + 1], verbose, force)
 
         elif args[1].lower() == 'commit':
-            if '--help' in args or '-h' in args:
+            if '--help' in args or '-h' in args or len(args) == 2:
                 commit_help()
             elif '-t' in args:
                 if len(args) <= args.index('-t') + 1:
@@ -91,7 +91,7 @@ def main():
 
         elif args[1].lower() == 'ignore':
             ignore = Ignore(cwd)
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 ignore_help()
             if '-tl' in args or '--template-list' in args:
                 ignore.get_template_list()
@@ -106,7 +106,7 @@ def main():
                 ignore.get_ignore_list()
 
         elif args[1].lower() == 'log':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 log_help()
                 sys.exit()
             log = Log(cwd)
@@ -122,7 +122,7 @@ def main():
                     log.get_commit_info()
 
         elif args[1].lower() == 'reset':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 reset_help()
                 return
 
@@ -133,7 +133,7 @@ def main():
             reset.last_commit(verbose=verbose)
 
         elif args[1].lower() == 'rollback':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 rollback_help()
                 return
 
@@ -144,14 +144,14 @@ def main():
             rollback.rollback(verbose)
 
         elif args[1].lower() == 'status':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 status_help()
                 return
             status = Status(cwd)
             status.status()
 
         elif args[1].lower() == 'checkout':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 checkout_help()
                 return
 
@@ -178,7 +178,7 @@ def main():
             checkout.checkout(branch_name, create_new_branch=create_new)
 
         elif args[1] == 'branch':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 branch_help()
                 return
             branch = Branch(cwd)
@@ -213,7 +213,7 @@ def main():
                 branch.remove_branch(args[args.index(command_flag) + 1], force=force)
 
         elif args[1].lower() == 'check':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 check_help()
                 return
 
@@ -221,7 +221,7 @@ def main():
             if '-c' in args or '--commits' in args:
                 checker.check_commits_chain()
 
-        elif args[1].lower() == '-h' or args[1].lower() == '--help':
+        elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
             vcs_help()
 
         else:

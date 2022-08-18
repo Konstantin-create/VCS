@@ -17,17 +17,24 @@ Functions:
 
 # Vars with help text
 vcs_text = """
+// Commit management
 vcs init - Initial command
 vcs add - Command to add files in tracked list
 vcs commit - Command to commit changes
 vcs reset - Command to reset last commit
+
+// Branches management
 vcs rollback - Command to rollback to last commit
 vcs checkout - Switch branches
 vcs branch - Command to modify branches
+
+// Auxiliary commands
 vcs ignore - Command to modify ignore file
 vcs log - Command to print info about commits
+
 vcs status - Command to print current vcs status
 vcs check - Command to check vcs state
+
 vcs -h | --help - This help
 """
 
