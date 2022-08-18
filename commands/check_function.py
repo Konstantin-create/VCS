@@ -34,16 +34,26 @@ class Checker:
             sys.exit()
 
         current_commit = self.last_commit_hash
+        gapes = []
         while True:
             commit_info_path = f'{self.vcs_path}/commits/{self.current_branch}/{current_commit}/commit_info.json'
             if not os.path.exists(commit_info_path):
                 print(Fore.RED + f'Commit {current_commit} not found')
                 sys.exit()
 
-            commit_info = json.load(open(commit_info_path, 'r'))
-            if current_commit == generate_hash(str(commit_info).encode()):
-                print(commit_info)
-                print()
+            try:
+                commit_info = json.load(open(commit_info_path, 'r'))
+            except json.decoder.JSONDecodeError:
+                print(Fore.RED + f'Conflicted commit: {current_commit}. The commit info file has been corrupted!')
+                sys.exit()
+            if current_commit != generate_hash(str(commit_info).encode()):
+                print(Fore.RED + f'Conflicted commit: {current_commit}. Commit info were modified!')
+                gapes.append(current_commit)
+            else:
+                print(Fore.GREEN + f'Valid commit: {current_commit}')
+            if commit_info['parent'] == self.current_branch:
+                break
+            current_commit = commit_info['parent']
 
     def branch_exists(self) -> bool:
         """Function to check is branch exists"""

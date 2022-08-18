@@ -106,7 +106,7 @@ def main():
                 ignore.get_ignore_list()
 
         elif args[1].lower() == 'log':
-            if '-h' in args or '--help' in args or len(args) == 2:
+            if '-h' in args or '--help' in args:
                 log_help()
                 sys.exit()
             log = Log(cwd)
@@ -122,7 +122,7 @@ def main():
                     log.get_commit_info()
 
         elif args[1].lower() == 'reset':
-            if '-h' in args or '--help' in args or len(args) == 2:
+            if '-h' in args or '--help' in args:
                 reset_help()
                 return
 
@@ -133,7 +133,7 @@ def main():
             reset.last_commit(verbose=verbose)
 
         elif args[1].lower() == 'rollback':
-            if '-h' in args or '--help' in args or len(args) == 2:
+            if '-h' in args or '--help' in args:
                 rollback_help()
                 return
 
@@ -144,7 +144,7 @@ def main():
             rollback.rollback(verbose)
 
         elif args[1].lower() == 'status':
-            if '-h' in args or '--help' in args or len(args) == 2:
+            if '-h' in args or '--help' in args:
                 status_help()
                 return
             status = Status(cwd)
@@ -178,7 +178,7 @@ def main():
             checkout.checkout(branch_name, create_new_branch=create_new)
 
         elif args[1] == 'branch':
-            if '-h' in args or '--help' in args or len(args) == 2:
+            if '-h' in args or '--help' in args:
                 branch_help()
                 return
             branch = Branch(cwd)
