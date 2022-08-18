@@ -8,3 +8,4 @@ from .rollback_function import *
 from .status_function import *
 from .checkout_function import *
 from .branch_function import *
+from .check_function import *

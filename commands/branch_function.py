@@ -22,6 +22,7 @@ init(autoreset=True)
 
 class Branch:
     """Class to manage branches"""
+    __slots__ = ('working_dir', 'vcs_path', 'current_branch', 'branches', 'last_commit_hash', 'tracked_files')
 
     def __init__(self, working_dir: str):
         self.working_dir = working_dir

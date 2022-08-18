@@ -49,7 +49,7 @@ def main():
             print(Fore.RED + 'VCS is not initialized try "vcs init"')
             sys.exit()
         if args[1].lower() == 'add':
-            if '--help' in args or '-h' in args:
+            if '--help' in args or '-h' in args or len(args) == 2:
                 add_help()
             else:
                 if len(args) <= args.index('add') + 1:
@@ -71,7 +71,7 @@ def main():
                     add.add_tracked_file(args[args.index('add') + 1], verbose, force)
 
         elif args[1].lower() == 'commit':
-            if '--help' in args or '-h' in args:
+            if '--help' in args or '-h' in args or len(args) == 2:
                 commit_help()
             elif '-t' in args:
                 if len(args) <= args.index('-t') + 1:
@@ -91,7 +91,7 @@ def main():
 
         elif args[1].lower() == 'ignore':
             ignore = Ignore(cwd)
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 ignore_help()
             if '-tl' in args or '--template-list' in args:
                 ignore.get_template_list()
@@ -151,7 +151,7 @@ def main():
             status.status()
 
         elif args[1].lower() == 'checkout':
-            if '-h' in args or '--help' in args:
+            if '-h' in args or '--help' in args or len(args) == 2:
                 checkout_help()
                 return
 
@@ -212,10 +212,16 @@ def main():
                     force = True
                 branch.remove_branch(args[args.index(command_flag) + 1], force=force)
 
-        elif args[1].lower() == 'test':
-            print(get_ignore(cwd))
+        elif args[1].lower() == 'check':
+            if '-h' in args or '--help' in args or len(args) == 2:
+                check_help()
+                return
 
-        elif args[1].lower() == '-h' or args[1].lower() == '--help':
+            checker = Checker(cwd)
+            if '-c' in args or '--commits' in args:
+                checker.check_commits_chain()
+
+        elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
             vcs_help()
 
         else:

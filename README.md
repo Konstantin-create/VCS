@@ -31,9 +31,11 @@ ___
     - [Reset](/docs/reset.md)
     - [Rollback](/docs/rollback.md)
     - [Checkout](/docs/checkout.md)
+    - [Branch](/docs/branch.md)
     - [Status](/docs/status.md)
     - [Log](/docs/log.md)
     - [Ignore](/docs/ignore.md)
+    - [Check](/docs/check.md)
 ___
 
 Author: [Konstantin-create](https://github.com/Konstantin-create)
