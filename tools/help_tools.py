@@ -12,6 +12,7 @@ Functions:
     - Ignore command help text
     - Status command help text
     - Log command help text
+    - Check command help text
 """
 
 # Vars with help text
@@ -26,6 +27,7 @@ vcs branch - Command to modify branches
 vcs ignore - Command to modify ignore file
 vcs log - Command to print info about commits
 vcs status - Command to print current vcs status
+vcs check - Command to check vcs state
 vcs -h | --help - This help
 """
 
@@ -88,12 +90,20 @@ vcs ignore -h | --help - This help
 
 status_text = """
 vcs status - Base command to print status
+vcs status -h | --help - This help
 """
 
 log_text = """
 vcs log - Print last commit log
     -a | --all - Print all commits
     -v | --verbose - Be verbose
+vcs log -h | --help - This help
+"""
+
+check_text = """
+vcs check
+    -c | --commits - Check commits chain in current branch
+vcs check -h | --help - This help
 """
 
 
@@ -140,3 +150,7 @@ def status_help():
 
 def log_help():
     print(log_text)
+
+
+def check_help():
+    print(check_text)

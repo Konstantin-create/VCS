@@ -212,8 +212,14 @@ def main():
                     force = True
                 branch.remove_branch(args[args.index(command_flag) + 1], force=force)
 
-        elif args[1].lower() == 'test':
-            print(get_ignore(cwd))
+        elif args[1].lower() == 'check':
+            if '-h' in args or '--help' in args:
+                check_help()
+                return
+
+            checker = Checker(cwd)
+            if '-c' in args or '--commits' in args:
+                checker.check_commits_chain()
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help':
             vcs_help()
