@@ -7,7 +7,10 @@ Check commits branch command(check commit info against commit hash)
 Valid commit: 6bfb1d8c17208a530ec34139ad915cd0508b8e8f7635782668b76d30f73ef99a
 Valid commit: 39b485c9b720d52897c0ad5f225c239361a740729ce1da5848c18bf3428662bb
 ```
+
+\
 Check is branches valid
+
 ```shell
 Valid branch: master
 Valid branch: test
