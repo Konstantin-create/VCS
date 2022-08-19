@@ -110,6 +110,7 @@ vcs log -h | --help - This help
 check_text = """
 vcs check
     -c | --commits - Check commits chain in current branch
+    -b | --branches - Check is branches valid
 vcs check -h | --help - This help
 """
 
