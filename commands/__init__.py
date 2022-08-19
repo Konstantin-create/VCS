@@ -5,6 +5,7 @@ from .ignore_function import *
 from .log_function import *
 from .reset_function import *
 from .rollback_function import *
+from .merge_function import *
 from .status_function import *
 from .checkout_function import *
 from .branch_function import *
