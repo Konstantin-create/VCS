@@ -223,6 +223,16 @@ def main():
             elif '-b' in args or '--branch' in args:
                 checker.check_branches()
 
+        elif args[1].lower() == 'merge':
+            if '-h' in args or '--help' in args or len(args) == 2:
+                merge_help()
+                return
+            merge = Merge(cwd)
+            if args[2] not in merge_flags:
+                merge.merge(args[2])
+            else:
+                print(Fore.RED + f'Branch {args[2]} not found. Use vcs merge -h | --help for help')
+
         elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
             vcs_help()
 

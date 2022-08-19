@@ -102,13 +102,13 @@ class Checker:
                     print(Fore.GREEN + 'Successfully removed from .vcs/commits/')
                     print()
 
+        tmp_config = config
         for branch in config:  # Find branches in config without pointer on last commit
             if config[branch] == '':
                 print(Fore.RED + 'Critical: ' + Fore.WHITE + f'Branch \'{branch}\' have no pointer to last hash!')
                 command = input('Choose action:\n  1 - Remove this branch name from config and commits(if exists)\n  '
                                 '2 - Set pointer to last commit\n~ ')
                 if command.isdigit() and int(command) == 1:
-                    tmp_config = config
                     del tmp_config[branch]
                     json.dump(tmp_config, open(f'{self.vcs_path}/config.json', 'w'))
                 elif command.isdigit() and int(command) == 2:
@@ -119,6 +119,7 @@ class Checker:
                             json.dump(config, open(f'{self.vcs_path}/config.json', 'w'))
                             break
                         print(Fore.RED + f'Commit {pointer} not found in branch {branch}')
+        # todo: check commit by hash is exists
 
     def branch_exists(self) -> bool:
         """Function to check is branch exists"""

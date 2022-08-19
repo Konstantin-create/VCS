@@ -8,6 +8,8 @@ Functions:
     - Reset command help text
     - Rollback command help text
     - Checkout command help text
+    - Branch command help text
+    - Merge command help text
 
     - Ignore command help text
     - Status command help text
@@ -27,6 +29,7 @@ vcs reset - Command to reset last commit
 vcs rollback - Command to rollback to last commit
 vcs checkout - Switch branches
 vcs branch - Command to modify branches
+vcs merge - Command to merge branches
 
 // Auxiliary commands
 vcs ignore - Command to modify ignore file
@@ -84,6 +87,10 @@ vcs branch - Print list of branches
 vcs branch -l | --list - Print list of branches
 vcs branch -n | --new <branch_name> - Create new branch
 vcs branch -d | --delete <branch_name> - Remove branch
+"""
+
+merge_text = """
+vcs merge <branch_name> - Merge branch_name with current branch with rebase
 """
 
 ignore_text = """
@@ -146,6 +153,10 @@ def checkout_help():
 
 def branch_help():
     print(branch_text)
+
+
+def merge_help():
+    print(merge_text)
 
 
 def ignore_help():
