@@ -220,6 +220,8 @@ def main():
             checker = Checker(cwd)
             if '-c' in args or '--commits' in args:
                 checker.check_commits_chain()
+            elif '-b' in args or '--branch' in args:
+                checker.check_branches()
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
             vcs_help()
@@ -230,3 +232,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
