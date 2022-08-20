@@ -10,7 +10,8 @@ import sys
 import json
 from datetime import datetime
 from colorama import init, Fore
-from tools import last_commit_hash, get_branch_name, get_tracked_files, generate_hash
+from tools import generate_hash, decode_file
+from tools import last_commit_hash, get_branch_name, get_tracked_files
 
 # Colorama init
 init()
@@ -30,23 +31,45 @@ class Merge:
     def merge(self, branch_name: str) -> None:
         """Function to merge branches"""
 
+        # Check is tracked files are not empty
+        if not len(self.tracked_files):
+            print(Fore.YELLOW + 'No tracked files were found. Try \'vcs add -A\'')
+            sys.exit()
         # Check is branch name not current branch
         if branch_name == self.current_branch:
             print(Fore.RED + 'You cant merge current branch with the same branch')
             sys.exit()
 
         # Check is branches exists
-        if self.is_branch_exists(branch_name):
+        if not self.is_branch_exists(branch_name):
             print(f'Branch {branch_name} is not found')
             sys.exit()
-        if self.is_branch_exists(self.current_branch):
+        if not self.is_branch_exists(self.current_branch):
             print(f'Branch {branch_name} is not exists')
             sys.exit()
 
         commit_info = json.dumps(self.create_commit_info(branch_name), indent=4)
         commit_hash = generate_hash(str(commit_info).encode())
-        os.mkdir(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}')
-        json.dump(commit_info, open(f'{self.vcs_path}/commits/{branch_name}/{commit_hash}/commit_info.json', 'w'))
+        # os.mkdir(f'{self.vcs_path}/commits/{self.current_branch}/{commit_hash}')
+        # json.dump(commit_info, open(f'{self.vcs_path}/commits/{self.current_branch}/{commit_hash}/commit_info.json', 'w'))
+        for key in json.loads(commit_info)['changes']:
+            filename_hash = key
+            file_data_hash = json.loads(commit_info)['changes'][list(key.keys())[0]]
+
+            for file in json.loads(commit_info)['changes']:
+                if list(file.keys())[0] == filename_hash:
+                    file_data_hash = file[filename_hash]
+                    break
+
+            decode_path = f'{self.vcs_path}/objects/{filename_hash}/{file_data_hash}'
+            if not os.path.exists(decode_path):
+                print(Fore.RED + 'Commit storage error')
+                sys.exit()
+            for file in self.tracked_files:
+                filename = list(file.keys())[0]
+                if file[filename] == filename_hash:
+                    print({filename: filename_hash})
+                    break
 
     def create_commit_info(self, new_branch_name) -> dict:
         """Function to create commit info"""
