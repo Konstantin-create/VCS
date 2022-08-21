@@ -32,6 +32,7 @@ ___
     - [Rollback](/docs/rollback.md)
     - [Checkout](/docs/checkout.md)
     - [Branch](/docs/branch.md)
+    - [Merge](/docs/merge.md)
     - [Status](/docs/status.md)
     - [Log](/docs/log.md)
     - [Ignore](/docs/ignore.md)
