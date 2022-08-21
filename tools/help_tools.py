@@ -90,7 +90,7 @@ vcs branch -d | --delete <branch_name> - Remove branch
 """
 
 merge_text = """
-vcs merge <branch_name> - Merge branch_name with current branch with rebase
+vcs merge <branch_name> - Merge branch_name with current branch in rebase mode
 """
 
 ignore_text = """
