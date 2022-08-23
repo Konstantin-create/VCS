@@ -39,6 +39,9 @@ ___
     - [Check](/docs/check.md)
 ___
 
+#P.S.
+VCS development has been temporarily stopped, but it will start when I get at least some feedback from you about the bugs found
+
 Author: [Konstantin-create](https://github.com/Konstantin-create)
 \
 Licence: [GNU General Public License v3.0](/LICENSE)
