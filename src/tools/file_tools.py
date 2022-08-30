@@ -8,13 +8,12 @@ Functions list:
 """
 
 # Imports
+from __future__ import annotations  # Necessary import for python < 3.10
+
 import os
 import sys
 import json
-from colorama import init, Fore
-
-# Colorama init
-init()
+from rich import print
 
 
 def get_all_files(working_dir: str) -> list:
@@ -77,5 +76,5 @@ def get_tracked_files(working_dir) -> None:
             if len(file.read()):
                 current_tracking = json.load(open(f'{working_dir}/.vcs/tracked_files.json'))
                 return current_tracking
-    print(Fore.YELLOW + 'No tracking files. Use "vcs add <file_name | -A | .>"')
+    print('[yellow]No tracking files. Use "vcs add <file_name | -A | .>[/yellow]"')
     sys.exit()
