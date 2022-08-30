@@ -9,12 +9,9 @@ import os
 import shutil
 import sys
 import json
-from colorama import init, Fore
+from rich import print
 from tools import generate_hash
 from tools import get_branch_name, last_commit_hash
-
-# Colorama init
-init()
 
 
 class Checker:
@@ -31,7 +28,7 @@ class Checker:
         """Function to check is commit_info hash is the similar with commit_hash"""
 
         if not self.branch_exists():
-            print(Fore.RED + f'Branch {self.current_branch} not found in .vcs/commits')
+            print(f'[red]Branch {self.current_branch} not found in .vcs/commits[/red]')
             sys.exit()
 
         current_commit = self.last_commit_hash
@@ -39,19 +36,19 @@ class Checker:
         while True:
             commit_info_path = f'{self.vcs_path}/commits/{self.current_branch}/{current_commit}/commit_info.json'
             if not os.path.exists(commit_info_path):
-                print(Fore.RED + f'Commit {current_commit} not found')
+                print(f'[red]Commit {current_commit} not found[/red]')
                 sys.exit()
 
             try:
                 commit_info = json.load(open(commit_info_path, 'r'))
             except json.decoder.JSONDecodeError:
-                print(Fore.RED + f'Conflicted commit: {current_commit}. The commit info file has been corrupted!')
+                print(f'[red]Conflicted commit: {current_commit}. The commit info file has been corrupted![/red]')
                 sys.exit()
             if current_commit != generate_hash(str(commit_info).encode()):
-                print(Fore.RED + f'Conflicted commit: {current_commit}. Commit info were modified!')
+                print(f'[red]Conflicted commit: {current_commit}. Commit info were modified![/red]')
                 gapes.append(current_commit)
             else:
-                print(Fore.GREEN + f'Valid commit: {current_commit}')
+                print(f'[green]Valid commit: {current_commit}[/green]')
             if commit_info['parent'] == self.current_branch:
                 break
             current_commit = commit_info['parent']
@@ -63,23 +60,23 @@ class Checker:
         config_items_delete = []  # List of commit items to delete
 
         if not os.path.exists(f'{self.vcs_path}/config.json'):
-            print(Fore.RED + 'Config file not found. Try to reinitialize vcs')
+            print('[red]Config file not found. Try to reinitialize vcs[/red]')
             sys.exit()
 
         try:
             config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
         except json.decoder.JSONDecodeError:
-            print(Fore.RED + 'The config file has been corrupted')
+            print('[red]The config file has been corrupted[/red]')
             sys.exit()
 
         for file_name in config:
             if file_name in branches:
-                print(Fore.GREEN + f'Valid branch: {file_name}')
+                print(f'[green]Valid branch: {file_name}[/green]')
                 branches.remove(file_name)
             else:
                 print()
                 command = input(
-                    Fore.RED + 'Critical: ' + Fore.WHITE + f'Branch {file_name} not found. Remove from config(yes/No): '
+                    f'[red]Critical:[/red] Branch {file_name} not found. Remove from config(yes/No): '
                 )
                 if 'y' in command:
                     config_items_delete = {file_name: config[file_name]}
@@ -94,18 +91,18 @@ class Checker:
         if len(branches) >= 1:  # Check branch list from commits/ are exists in config.json
             for branch_name in branches:
                 command = input(
-                    Fore.YELLOW + 'Warning: ' + Fore.WHITE +
+                    f'[yellow]Warning:[/yellow] '
                     f'Find branch \'{branch_name}\' in commits folder. Select action:\n  1 - Remove\n  2 - Ignore\n~ '
                 )
                 if command.isdigit() and int(command) == 1:
                     shutil.rmtree(f'{self.vcs_path}/commits/{branch_name}')
-                    print(Fore.GREEN + 'Successfully removed from .vcs/commits/')
+                    print('[green]Successfully removed from .vcs/commits/[/green]')
                     print()
 
         tmp_config = config
         for branch in config:  # Find branches in config without pointer on last commit
             if config[branch] == '':
-                print(Fore.RED + 'Critical: ' + Fore.WHITE + f'Branch \'{branch}\' have no pointer to last hash!')
+                print(f'[red]Critical:[/red] Branch \'{branch}\' have no pointer to last hash!')
                 command = input('Choose action:\n  1 - Remove this branch name from config and commits(if exists)\n  '
                                 '2 - Set pointer to last commit\n~ ')
                 if command.isdigit() and int(command) == 1:
@@ -118,7 +115,7 @@ class Checker:
                             config[branch] = pointer
                             json.dump(config, open(f'{self.vcs_path}/config.json', 'w'))
                             break
-                        print(Fore.RED + f'Commit {pointer} not found in branch {branch}')
+                        print(f'[red]Commit {pointer} not found in branch {branch}[/red]')
         # todo: check commit by hash is exists
 
     def branch_exists(self) -> bool:

@@ -9,13 +9,10 @@ Functions:
 import os
 import sys
 import json
+from rich import print
 from datetime import datetime
-from colorama import init, Fore
 from tools import generate_hash, decode_file
 from tools import get_branch_name, last_commit_hash, get_tracked_files, get_changes, branch_last_commit
-
-# Colorama init
-init(autoreset=True)
 
 
 class CheckOut:
@@ -33,11 +30,11 @@ class CheckOut:
         """Function to switch branch"""
 
         if branch_name == self.current_branch:
-            print(Fore.YELLOW + f'Already on {branch_name}')
+            print(f'[yellow]Already on {branch_name}[/yellow]')
             sys.exit()
         if not self.is_branch_exists(branch_name) and not create_new_branch:
-            print(Fore.RED + f'No such branch {branch_name}. To create a new branch use -b flag. '
-                             f'More in "vcs checkout -h | --help"')
+            print(f'[red]No such branch {branch_name}. To create a new branch use -b flag. '
+                  f'More in "vcs checkout -h | --help"[/red]')
             return
 
         if not self.is_branch_exists(branch_name) and create_new_branch:
@@ -59,7 +56,8 @@ class CheckOut:
                 if filename[list(filename.keys())[0]] == filename_hash:
                     filename = list(filename.keys())[0]
                     decode_file(
-                        f'{self.vcs_path}/objects/{filename_hash}/{file[filename_hash]}', f'{self.working_dir}/{filename}'
+                        f'{self.vcs_path}/objects/{filename_hash}/{file[filename_hash]}',
+                        f'{self.working_dir}/{filename}'
                     )
                     break
 
@@ -109,13 +107,13 @@ class CheckOut:
                         if filename_to_find in bin_file:
                             changes.append({filename_to_find: bin_file[filename_to_find]})
             else:
-                print(Fore.RED + 'Commit storage error')
+                print('[red]Commit storage error[/red]')
                 sys.exit()
 
             if commit_info['parent'] == self.current_branch:
                 if len(files_to_found) != len(changes):
-                    print(Fore.RED + 'Commit storage error')
-                    print(Fore.RED + f'Elements {files_to_found} not found')
+                    print('[red]Commit storage error[/red]')
+                    print(f'[red]Elements {files_to_found} not found[/red]')
                     sys.exit()
                 break
             current_commit = commit_info['parent']
