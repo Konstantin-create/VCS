@@ -9,10 +9,7 @@ Functions:
 import os
 import sys
 import json
-from colorama import init, Fore
-
-# Colorama init
-init()
+from rich import print
 
 
 def get_branches(working_dir: str) -> list:
@@ -43,14 +40,10 @@ def get_changes(working_dir: str, branch_name: str, tracked_files: list, last_co
                         changes.append({filename: bin_file[filename]})
                         files_to_found.remove(filename)
         else:
-            print(Fore.RED + 'Commit storage error')
+            print('[red]Commit storage error[/red]')
             sys.exit()
 
         if commit_info['parent'] == branch_name:
-            # if len(files_to_found) != len(changes):
-            #     print(Fore.RED + 'Commit storage error')
-            #     print(Fore.RED + f'Elements {files_to_found} not found')
-            #     sys.exit()
             break
         current_commit = commit_info['parent']
     return changes
