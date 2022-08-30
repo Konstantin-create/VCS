@@ -7,12 +7,9 @@ Functions:
 
 # Imports
 import os
-from colorama import init, Fore
+from rich import print
 from tools import generate_hash
 from tools import get_branch_name, last_commit_hash, get_tracked_files
-
-# Colorama init
-init(autoreset=True)
 
 
 class Status:
@@ -29,7 +26,7 @@ class Status:
     def status(self):
         """Function to print vcs status"""
 
-        print(f'On branch {Fore.YELLOW + self.branch_name}')
+        print(f'On branch [yellow]{self.branch_name}[/yellow]')
         print()
         changes = self.get_changes()
         if changes['deleted']:
@@ -40,7 +37,7 @@ class Status:
             print('Changes:')
             print('  ' + '  '.join(changes['modified']))
         else:
-            print(Fore.YELLOW + 'Nothing to commit')
+            print('[yellow]Nothing to commit[/yellow]')
 
     def get_changes(self) -> dict:
         """Function to get changes"""
