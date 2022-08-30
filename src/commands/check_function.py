@@ -9,6 +9,7 @@ import os
 import shutil
 import sys
 import json
+from rich import print
 from tools import generate_hash
 from tools import get_branch_name, last_commit_hash
 
