@@ -21,7 +21,7 @@ class Status:
         self.vcs_path = f'{self.working_dir}/.vcs'
         self.branch_name = get_branch_name(self.working_dir)
         self.last_commit_hash = last_commit_hash(self.working_dir)
-        self.tracked_files = get_tracked_files(self.working_dir)
+        self.tracked_files = get_tracked_files(self.working_dir) or []
 
     def status(self):
         """Function to print vcs status"""
@@ -29,17 +29,17 @@ class Status:
         print(f'On branch [yellow]{self.branch_name}[/yellow]')
         print()
         changes = self.get_changes()
-        if changes['deleted']:
+        if changes[1]:
             print('Deleted:')
-            print('  ' + '  '.join(changes['deleted']))
+            print('  ' + '  '.join(changes[1]))
             print()
-        if changes['modified']:
+        if changes[0]:
             print('Changes:')
-            print('  ' + '  '.join(changes['modified']))
+            print('  ' + '  '.join(changes[0]))
         else:
             print('[yellow]Nothing to commit[/yellow]')
 
-    def get_changes(self) -> dict:
+    def get_changes(self) -> tuple:
         """Function to get changes"""
 
         deleted = []
@@ -54,4 +54,4 @@ class Status:
                 if not os.path.exists(f'{self.vcs_path}/objects/{tracked_file[filename]}/{file_data}'):
                     modified.append(filename)
 
-        return {'modified': modified, 'deleted': deleted}
+        return modified, deleted
