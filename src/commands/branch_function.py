@@ -27,7 +27,7 @@ class Branch:
         self.current_branch = get_branch_name(self.working_dir)
         self.branches = get_branches(self.working_dir)
         self.last_commit_hash = last_commit_hash(self.working_dir)
-        self.tracked_files = get_tracked_files(self.working_dir)
+        self.tracked_files = get_tracked_files(self.working_dir) or []
 
     def create_new(self, branch_name: str) -> None:
         """Function to create new branch"""
@@ -42,7 +42,7 @@ class Branch:
             print(f'[red]Branch {branch_name} is already exists[/red]')
             sys.exit()
 
-    def branches_list(self):
+    def branches_list(self) -> None:
         """Function to print list of branches"""
 
         print('Branches:')

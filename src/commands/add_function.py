@@ -12,7 +12,7 @@ import os
 import sys
 import json
 from rich import print
-from tools import get_all_files, is_exists, is_ignored, get_ignore, generate_hash, is_vcs_initialized
+from tools import get_all_files, is_exists, is_ignored, get_ignore, generate_hash
 
 
 class Add:
@@ -27,20 +27,15 @@ class Add:
 
     def add_tracked_file(self, file_name: str, verbose: bool, force: bool) -> None:
         """Function to add file to tracked list"""
-        if not is_vcs_initialized(self.run_path):
-            print('[red].vcs folder not found\nTry "vcs init"[/red]')
-            return
 
         self.verbose = verbose
         self.force = force
 
         current_tracking = []
         if os.path.exists(self.tracked_files_path):
-            with open(self.tracked_files_path, encoding='utf-8') as file:
-                file_data = file.read()
-                if len(file_data):
-                    for file in json.load(open(self.tracked_files_path)):
-                        current_tracking.append(list(file.keys())[0])
+            if len(open(self.tracked_files_path, encoding='utf-8').read()):
+                for file_hash in json.load(open(self.tracked_files_path)):
+                    current_tracking.append(list(file_hash.keys())[0])
 
         if not (file_name == '-A' or file_name == '.'):
             if is_exists(self.run_path, file_name):
@@ -82,6 +77,7 @@ class Add:
 
     def tracked_files_list(self) -> None:
         """Function to print list of current tracked files"""
+
         if os.path.exists(self.tracked_files_path):
             with open(self.tracked_files_path, 'r', encoding='utf-8') as file:
                 if len(file.read()):
@@ -95,9 +91,6 @@ class Add:
 
     def tracked_files_clean(self) -> None:
         """Function to clean tracked files list"""
-        if not is_vcs_initialized(self.run_path):
-            print('[red].vcs folder not found\nTry "vcs init"[/red]')
-            return
-        with open(self.tracked_files_path, 'w') as file:
-            file.write('[]')
+
+        open(self.tracked_files_path, 'w').write('[]')
         print('[green]\nTracked files have been cleared[/green]')
