@@ -12,7 +12,6 @@ from rich import print
 from tools.help_tools import *
 from tools.flags_tools import *
 from tools import is_vcs_initialized, get_ignore
-from tools.help_tools import log_help
 
 # Get run args
 args = sys.argv
@@ -24,7 +23,7 @@ def main():
 
     cwd = os.getcwd()
     if not len(args) - 1:
-        vcs_help()
+        print(vcs_text)
         return
 
     if args[1].lower() == 'init':
@@ -32,7 +31,7 @@ def main():
         if '-quiet' in args or '-q' in args:
             quiet = True
         if '--help' in args or '-h' in args:
-            init_help()
+            print(init_text)
         elif '-b' in args:
             if len(args) <= args.index('-b') + 1:
                 print('[red]If you gonna use -b flag - Branch name is required[/red]')
@@ -47,7 +46,7 @@ def main():
             sys.exit()
         if args[1].lower() == 'add':
             if '--help' in args or '-h' in args or len(args) == 2:
-                add_help()
+                print(add_text)
             else:
                 if len(args) <= args.index('add') + 1:
                     print('[red]File name or . | -A is required[/red]')
@@ -69,7 +68,7 @@ def main():
 
         elif args[1].lower() == 'commit':
             if '--help' in args or '-h' in args or len(args) == 2:
-                commit_help()
+                print(commit_text)
             elif '-t' in args:
                 if len(args) <= args.index('-t') + 1:
                     print('[red]Commit message is required[/red]')
@@ -89,7 +88,7 @@ def main():
         elif args[1].lower() == 'ignore':
             ignore = Ignore(cwd)
             if '-h' in args or '--help' in args or len(args) == 2:
-                ignore_help()
+                print(ignore_text)
             if '-tl' in args or '--template-list' in args:
                 ignore.get_template_list()
             elif '-n' in args or '--new' in args:
@@ -104,7 +103,7 @@ def main():
 
         elif args[1].lower() == 'log':
             if '-h' in args or '--help' in args:
-                log_help()
+                print(log_text)
                 sys.exit()
             log = Log(cwd)
             if '-a' in args or '--all' in args:
@@ -120,7 +119,7 @@ def main():
 
         elif args[1].lower() == 'reset':
             if '-h' in args or '--help' in args:
-                reset_help()
+                print(reset_text)
                 return
 
             verbose = False
@@ -131,7 +130,7 @@ def main():
 
         elif args[1].lower() == 'rollback':
             if '-h' in args or '--help' in args:
-                rollback_help()
+                print(rollback_text)
                 return
 
             verbose = False
@@ -142,14 +141,14 @@ def main():
 
         elif args[1].lower() == 'status':
             if '-h' in args or '--help' in args:
-                status_help()
+                print(status_text)
                 return
             status = Status(cwd)
             status.status()
 
         elif args[1].lower() == 'checkout':
             if '-h' in args or '--help' in args or len(args) == 2:
-                checkout_help()
+                print(checkout_text)
                 return
 
             branch_name = ''
@@ -176,7 +175,7 @@ def main():
 
         elif args[1] == 'branch':
             if '-h' in args or '--help' in args:
-                branch_help()
+                print(branch_text)
                 return
             branch = Branch(cwd)
 
@@ -210,7 +209,7 @@ def main():
 
         elif args[1].lower() == 'check':
             if '-h' in args or '--help' in args or len(args) == 2:
-                check_help()
+                print(check_text)
                 return
 
             checker = Checker(cwd)
@@ -221,7 +220,7 @@ def main():
 
         elif args[1].lower() == 'merge':
             if '-h' in args or '--help' in args or len(args) == 2:
-                merge_help()
+                print(merge_text)
                 return
             merge = Merge(cwd)
             if args[2] not in merge_flags:
@@ -230,7 +229,7 @@ def main():
                 print(f'[red]Branch {args[2]} not found. Use vcs merge -h | --help for help[/red]')
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
-            vcs_help()
+            print(vcs_text)
 
         else:
             print(f'[red]No such command {args[1]}[/red]')
