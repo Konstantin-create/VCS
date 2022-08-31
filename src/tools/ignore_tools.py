@@ -4,8 +4,9 @@ Functions:
     - Check is file ignored(is its filename includes frases from .ignore file)
     - Function to parse .ignore file
 """
-
 # Imports
+from __future__ import annotations  # For python < 3.10
+
 from tools.file_tools import is_exists
 
 
