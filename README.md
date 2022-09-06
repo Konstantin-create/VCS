@@ -1,4 +1,8 @@
 # VCS
+<p align="center"> 
+  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Konstantin-create/VCS&title=views%20daily/total" alt="Views" /> 
+  <a href="https://hitsofcode.com/github/Konstantin-create/VCS/view?branch=v2"><img alt="HoC" src="https://hitsofcode.com/github/Konstantin-create/VCS?branch=main"/></a> 
+ </p>
 VCS - is my simple open source version controll system written on python.
 
 
