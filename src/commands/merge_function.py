@@ -8,13 +8,10 @@ Functions:
 import os
 import sys
 import json
+from rich import print
 from datetime import datetime
-from colorama import init, Fore
 from tools import generate_hash, get_changes, decode_file
 from tools import last_commit_hash, get_branch_name, get_tracked_files, branch_last_commit
-
-# Colorama init
-init()
 
 
 class Merge:
@@ -33,11 +30,11 @@ class Merge:
 
         # Check is tracked files are not empty
         if not len(self.tracked_files):
-            print(Fore.YELLOW + 'No tracked files were found. Try \'vcs add -A\'')
+            print('[yellow]No tracked files were found. Try \'vcs add -A\'[/yellow]')
             sys.exit()
         # Check is branch name not current branch
         if branch_name == self.current_branch:
-            print(Fore.RED + 'You cant merge current branch with the same branch')
+            print('[red]You cant merge current branch with the same branch[/red]')
             sys.exit()
 
         # Check is branches exists
@@ -61,7 +58,7 @@ class Merge:
                         f'{self.vcs_path}/objects/'
                         f'{list(file_to_save.keys())[0]}/{file_to_save[list(file_to_save.keys())[0]]}',
                         f'{self.working_dir}/{list(tracked_file.keys())[0]}')
-        print(Fore.GREEN + f'Successfully merged from {branch_name}. Merge commit: {commit_hash}')
+        print(f'[green]Successfully merged from {branch_name}. Merge commit: {commit_hash}[/green]')
 
     def create_commit_info(self, new_branch_name: str) -> dict:
         """Function to create commit info"""

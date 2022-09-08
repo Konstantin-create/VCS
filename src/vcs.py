@@ -8,14 +8,10 @@ Functions:
 
 # Imports
 from commands import *
+from rich import print
 from tools.help_tools import *
 from tools.flags_tools import *
-from colorama import init, Fore
 from tools import is_vcs_initialized, get_ignore
-from tools.help_tools import log_help
-
-# Colorama init
-init(autoreset=True)
 
 # Get run args
 args = sys.argv
@@ -27,7 +23,7 @@ def main():
 
     cwd = os.getcwd()
     if not len(args) - 1:
-        vcs_help()
+        print(vcs_text)
         return
 
     if args[1].lower() == 'init':
@@ -35,10 +31,10 @@ def main():
         if '-quiet' in args or '-q' in args:
             quiet = True
         if '--help' in args or '-h' in args:
-            init_help()
+            print(init_text)
         elif '-b' in args:
             if len(args) <= args.index('-b') + 1:
-                print(Fore.RED + 'If you gonna use -b flag - Branch name is required')
+                print('[red]If you gonna use -b flag - Branch name is required[/red]')
                 sys.exit()
             Init(cwd, base_branch=args[args.index('-b') + 1], quiet=quiet)
         else:
@@ -46,20 +42,20 @@ def main():
 
     else:
         if not is_vcs_initialized(cwd):
-            print(Fore.RED + 'VCS is not initialized try "vcs init"')
+            print('[red]VCS is not initialized try "vcs init"[/red]')
             sys.exit()
         if args[1].lower() == 'add':
             if '--help' in args or '-h' in args or len(args) == 2:
-                add_help()
+                print(add_text)
             else:
                 if len(args) <= args.index('add') + 1:
-                    print(Fore.RED + 'File name or . | -A is required')
+                    print('[red]File name or . | -A is required[/red]')
                     sys.exit()
                 add = Add(cwd)
                 if args[args.index('add') + 1] == '-l' or args[args.index('add') + 1] == '--list':
                     add.tracked_files_list()
                 elif args[args.index('add') + 1] == '-c' or args[args.index('add') + 1] == '--clean':
-                    print(Fore.YELLOW + 'Cleaning...')
+                    print('[yellow]Cleaning...[/yellow]')
                     add.tracked_files_clean()
                 else:
                     verbose = False
@@ -72,10 +68,10 @@ def main():
 
         elif args[1].lower() == 'commit':
             if '--help' in args or '-h' in args or len(args) == 2:
-                commit_help()
+                print(commit_text)
             elif '-t' in args:
                 if len(args) <= args.index('-t') + 1:
-                    print(Fore.RED + 'Commit message is required')
+                    print('[red]Commit message is required[/red]')
                     sys.exit()
 
                 if args[args.index('-t') + 1] not in commit_flags:
@@ -85,14 +81,14 @@ def main():
                     else:
                         commit.commit()
                 else:
-                    print(Fore.RED + 'Commit text error. Use "vcs commit --help" for help')
+                    print('[red]Commit text error. Use "vcs commit --help" for help[/red]')
             else:
-                print(Fore.RED + 'Command not found. User "vcs commit --help" for help')
+                print('[red]Command not found. User "vcs commit --help" for help[/red]')
 
         elif args[1].lower() == 'ignore':
             ignore = Ignore(cwd)
             if '-h' in args or '--help' in args or len(args) == 2:
-                ignore_help()
+                print(ignore_text)
             if '-tl' in args or '--template-list' in args:
                 ignore.get_template_list()
             elif '-n' in args or '--new' in args:
@@ -107,7 +103,7 @@ def main():
 
         elif args[1].lower() == 'log':
             if '-h' in args or '--help' in args:
-                log_help()
+                print(log_text)
                 sys.exit()
             log = Log(cwd)
             if '-a' in args or '--all' in args:
@@ -123,7 +119,7 @@ def main():
 
         elif args[1].lower() == 'reset':
             if '-h' in args or '--help' in args:
-                reset_help()
+                print(reset_text)
                 return
 
             verbose = False
@@ -134,7 +130,7 @@ def main():
 
         elif args[1].lower() == 'rollback':
             if '-h' in args or '--help' in args:
-                rollback_help()
+                print(rollback_text)
                 return
 
             verbose = False
@@ -145,14 +141,14 @@ def main():
 
         elif args[1].lower() == 'status':
             if '-h' in args or '--help' in args:
-                status_help()
+                print(status_text)
                 return
             status = Status(cwd)
             status.status()
 
         elif args[1].lower() == 'checkout':
             if '-h' in args or '--help' in args or len(args) == 2:
-                checkout_help()
+                print(checkout_text)
                 return
 
             branch_name = ''
@@ -166,12 +162,12 @@ def main():
                     branch_flag = '--branch'
 
                 if len(args) <= args.index(branch_flag):
-                    print(Fore.RED + 'No branch name found. Try "vcs checkout -h | --help"')
+                    print('[red]No branch name found. Try "vcs checkout -h | --help"[/red]')
                     return
                 branch_name = args[args.index(branch_flag) + 1]
                 create_new = True
             if not len(branch_name):
-                print(Fore.RED + 'No branch name found. Try "vcs checkout -h | --help"')
+                print('[red]No branch name found. Try "vcs checkout -h | --help"[/red]')
                 return
 
             checkout = CheckOut(cwd)
@@ -179,7 +175,7 @@ def main():
 
         elif args[1] == 'branch':
             if '-h' in args or '--help' in args:
-                branch_help()
+                print(branch_text)
                 return
             branch = Branch(cwd)
 
@@ -192,12 +188,11 @@ def main():
                 else:
                     command_flag = '--new'
                 if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
-                    print(Fore.RED + 'Branch name not found')
+                    print('[red]Branch name not found[/red]')
                     return
                 branch.create_new(args[args.index(command_flag) + 1])
 
             elif '-d' in args or '--delete' in args:
-                command_flag = ''
                 force = False
 
                 if '-d' in args:
@@ -206,7 +201,7 @@ def main():
                     command_flag = '--delete'
 
                 if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
-                    print(Fore.RED + 'Branch name not found')
+                    print('[red]Branch name not found[/red]')
                     return
                 if '-f' in args or '--force' in args:
                     force = True
@@ -214,7 +209,7 @@ def main():
 
         elif args[1].lower() == 'check':
             if '-h' in args or '--help' in args or len(args) == 2:
-                check_help()
+                print(check_text)
                 return
 
             checker = Checker(cwd)
@@ -225,21 +220,20 @@ def main():
 
         elif args[1].lower() == 'merge':
             if '-h' in args or '--help' in args or len(args) == 2:
-                merge_help()
+                print(merge_text)
                 return
             merge = Merge(cwd)
             if args[2] not in merge_flags:
                 merge.merge(args[2])
             else:
-                print(Fore.RED + f'Branch {args[2]} not found. Use vcs merge -h | --help for help')
+                print(f'[red]Branch {args[2]} not found. Use vcs merge -h | --help for help[/red]')
 
         elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
-            vcs_help()
+            print(vcs_text)
 
         else:
-            print(Fore.RED + f'No such command {args[1]}')
+            print(f'[red]No such command {args[1]}[/red]')
 
 
 if __name__ == '__main__':
     main()
-

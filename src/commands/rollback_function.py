@@ -9,13 +9,10 @@ Functions:
 import os
 import sys
 import json
+from rich import print
 from datetime import datetime
-from colorama import init, Fore
 from tools import last_commit_hash, previous_commit_hash, decode_file, generate_hash
 from tools import get_branch_name, get_tracked_files
-
-# Colorama init
-init(autoreset=True)
 
 
 class Rollback:
@@ -36,14 +33,14 @@ class Rollback:
         if not self.previous_commit_hash:
             print(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json not exists!')
         if self.previous_commit_hash == self.branch_name:
-            print(Fore.RED + 'You cant rollback initial commit')
+            print('[red]You cant rollback initial commit[/red]')
             sys.exit()
 
         changes = []
         for file in self.tracked_files:
             file_commits = self.check_file_objects(file[list(file.keys())[0]])  # Get file data hashes
             if not len(file_commits):  # Where file object from commit to found
-                print(Fore.RED + 'Commit storage error')
+                print('[red]Commit storage error[/red]')
                 sys.exit()
 
             if len(file_commits) > 1:
@@ -58,7 +55,7 @@ class Rollback:
                         }
                     )
                 else:
-                    print(Fore.RED + 'Commit storage error')
+                    print('[red]Commit storage error[/red]')
                     sys.exit()
             else:
                 changes.append(
@@ -87,7 +84,7 @@ class Rollback:
                 print(f'    File name: {list(file.keys())[0]}')
                 print(f'    File data hash: {file[list(file.keys())[0]][1]}')
                 print()
-        print(Fore.GREEN + 'Lucky rollback')
+        print('[green]Lucky rollback[/green]')
 
     def check_file_objects(self, file_hash: str) -> list:
         """Function to get file objects"""
@@ -118,7 +115,7 @@ class Rollback:
                         return file[filename_hash]
 
                 if commit_data['parent'] == self.branch_name:
-                    print(Fore.RED + 'Commit storage error')
+                    print('[red]Commit storage error[/red]')
                     sys.exit()
                 current_commit = commit_data['parent']
 
@@ -153,4 +150,4 @@ class Rollback:
             with open(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/commit_info.json', 'w') as file:
                 json.dump(commit_info, file)
         else:
-            print(Fore.RED + 'Repo is already up to date')
+            print('[red]Repo is already up to date[/red]')

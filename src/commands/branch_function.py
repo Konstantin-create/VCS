@@ -10,14 +10,11 @@ import os
 import sys
 import json
 import shutil
+from rich import print
 from datetime import datetime
-from colorama import init, Fore
 from tools import generate_hash
 from tools import get_branch_name, get_branches
 from tools import last_commit_hash, get_tracked_files, get_changes
-
-# Colorama init
-init(autoreset=True)
 
 
 class Branch:
@@ -30,7 +27,7 @@ class Branch:
         self.current_branch = get_branch_name(self.working_dir)
         self.branches = get_branches(self.working_dir)
         self.last_commit_hash = last_commit_hash(self.working_dir)
-        self.tracked_files = get_tracked_files(self.working_dir)
+        self.tracked_files = get_tracked_files(self.working_dir) or []
 
     def create_new(self, branch_name: str) -> None:
         """Function to create new branch"""
@@ -39,13 +36,13 @@ class Branch:
             commit_info = self.create_commit_info(branch_name)
             commit_hash = generate_hash(str(commit_info).encode())
             self.write_changes(branch_name, commit_info, commit_hash)
-            print(Fore.GREEN + f'Branch {branch_name} has been created')
-            print(f'{len(commit_info["changes"])} files were inherited')
+            print(f'[green]Branch {branch_name} has been created')
+            print(f'{len(commit_info["changes"])} files were inherited[/green]')
         else:
-            print(Fore.RED + f'Branch {branch_name} is already exists')
+            print(f'[red]Branch {branch_name} is already exists[/red]')
             sys.exit()
 
-    def branches_list(self):
+    def branches_list(self) -> None:
         """Function to print list of branches"""
 
         print('Branches:')
@@ -57,13 +54,13 @@ class Branch:
         """Function to remove branch"""
 
         if len(branch_name) <= 1:
-            print(Fore.YELLOW + 'You can\'t remove the last branch')
+            print('[yellow]You can\'t remove the last branch[/yellow]')
             sys.exit()
         if self.current_branch == branch_name:
-            print(Fore.YELLOW + 'You can\'t delete the branch you are currently on')
+            print('[yellow]You can\'t delete the branch you are currently on[/yellow]')
             sys.exit()
         if not self.is_branch_exists(branch_name):
-            print(Fore.RED + f'Branch {branch_name} not found')
+            print(f'[red]Branch {branch_name} not found[/red]')
             sys.exit()
 
         if force:  # Force mode removing
@@ -74,7 +71,7 @@ class Branch:
     def remove_branch_force(self, branch_name: str) -> None:
         """Function to remove branch in a force mode"""
 
-        print(Fore.YELLOW + f'Deleting {branch_name} in force mode')
+        print(f'[yellow]Deleting {branch_name} in force mode[/yellow]')
         shutil.rmtree(f'{self.vcs_path}/commits/{branch_name}')
         current_config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
         if branch_name in current_config:
@@ -87,7 +84,7 @@ class Branch:
 
         config = json.load(open(f'{self.vcs_path}/config.json', 'r'))
         if branch_name not in config:
-            print(Fore.RED + 'Commit storage error')
+            print('[red]Commit storage error[/red]')
             sys.exit()
 
         master_changes = get_changes(self.working_dir, self.current_branch, self.tracked_files, self.last_commit_hash)
@@ -95,7 +92,7 @@ class Branch:
         difference = []
 
         if not (len(master_changes) == len(current_changes) == len(self.tracked_files)):
-            print(Fore.RED + 'Commit storage error')
+            print('[red]Commit storage error[/red]')
             sys.exit()
 
         for i in range(len(self.tracked_files)):

@@ -3,13 +3,15 @@ Tools for print help text in commands
 Functions:
     - Get ignore template by name
 """
+# Imports
+from __future__ import annotations  # For python < 3.10
 
 python = \
     '''# Python ignores
     # Cache
     __pycache__
     
-    # Enviroments
+    # Environments
     venv/
     env/
     .venv/

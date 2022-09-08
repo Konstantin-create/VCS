@@ -8,11 +8,8 @@ Functions:
 # Imports
 import os
 import json
-from colorama import init, Fore
+from rich import print
 from tools import last_commit_hash, get_branch_name
-
-# Colorama init
-init(autoreset=True)
 
 
 class Log:
@@ -27,7 +24,7 @@ class Log:
 
         if commit_hash == '':
             if not last_commit_hash(self.working_dir):
-                print(Fore.RED + 'You have no commits in this dir')
+                print('[red]You have no commits in this dir[/red]')
                 return
             if os.path.exists(
                     f'{self.working_dir}/.vcs/commits/'
@@ -56,13 +53,13 @@ class Log:
                 print(f'Parent: {commit_info["parent"]}')
                 print()
             else:
-                print(Fore.RED + f'Commit {commit_hash} not found!')
+                print(f'[red]Commit {commit_hash} not found![/red]')
 
     def get_all_commits(self, verbose: bool) -> None:
         """Function to print all of commits"""
 
         if not last_commit_hash(self.working_dir):
-            print(Fore.RED + 'You have no commits in this dir')
+            print('[red]You have no commits in this dir[/red]')
             return
         commits_path = f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
         if os.path.exists(f'{commits_path}/{last_commit_hash(self.working_dir)}/commit_info.json'):
@@ -89,14 +86,14 @@ class Log:
                                             f'{self.working_dir}/.vcs/commits/{get_branch_name(self.working_dir)}/'
                                             f'{previous_commit}/commit_info.json') as file:
                                         commit_info = json.load(file)
-                                    print(f'Commit: {Fore.YELLOW + previous_commit + Fore.WHITE} - Initial commit')
+                                    print(f'Commit: [yellow]{previous_commit}[/yellow] - Initial commit')
                                     print(f'Message: {commit_info["message"]}')
                                     print(f'Time stamp: {commit_info["time_stamp"]}')
                                     print('Parent: Null')
                                 else:
-                                    print(Fore.RED + f'Commit {previous_commit} not found!')
+                                    print(f'[red]Commit {previous_commit} not found![/red]')
                                 break
-                            print(Fore.YELLOW + previous_commit + ' - Initial commit')
+                            print(f'[yellow]{previous_commit}[/yellow] - Initial commit')
                             break
                         if verbose:
                             self.get_commit_info(previous_commit)
@@ -106,4 +103,4 @@ class Log:
             print()
             print(f'Total {counter} commits found')
         else:
-            print(Fore.RED + 'Commit storage error try to use help on https://github.com/Konstantin-create/VCS/')
+            print('[red]Commit storage error try to use help on https://github.com/Konstantin-create/VCS/[/red]')

@@ -11,12 +11,9 @@ import os
 import sys
 import json
 import shutil
-from colorama import init, Fore
+from rich import print
 from tools import last_commit_hash, previous_commit_hash
 from tools import get_branch_name, decode_file, get_tracked_files
-
-# Colorama init
-init(autoreset=True)
 
 
 class Reset:
@@ -38,14 +35,14 @@ class Reset:
         if not self.previous_commit_hash:
             print(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}/commit_info.json not exists!')
         if self.previous_commit_hash == self.branch_name:
-            print(Fore.RED + 'You cant reset initial commit')
+            print('[red]You cant reset initial commit[/red]')
             sys.exit()
 
         changes = []
         for file in self.tracked_files:
             file_commits = self.check_file_objects(file[list(file.keys())[0]])  # Get file data hashes
             if not len(file_commits):  # Where file object from commit to found
-                print(Fore.RED + 'Commit storage error')
+                print('[red]Commit storage error[/red]')
                 sys.exit()
 
             if len(file_commits) > 1:
@@ -60,7 +57,7 @@ class Reset:
                         }
                     )
                 else:
-                    print(Fore.RED + 'Commit storage error')
+                    print('[red]Commit storage error[/red]')
                     sys.exit()
             else:
                 changes.append(
@@ -80,7 +77,7 @@ class Reset:
                 print(f'    File name: {list(file.keys())[0]}')
                 print(f'    File data hash: {file[list(file.keys())[0]][1]}')
                 print()
-        print(Fore.GREEN + 'Lucky rollback')
+        print('[green]Lucky rollback[/green]')
         self.recovery_files(changes)
         self.remove_last_commit()
 
@@ -113,7 +110,7 @@ class Reset:
                         return file[filename_hash]
 
                 if commit_data['parent'] == self.branch_name:
-                    print(Fore.RED + 'Commit storage error')
+                    print('[red]Commit storage error[/red]')
                     sys.exit()
                 current_commit = commit_data['parent']
 
@@ -139,11 +136,11 @@ class Reset:
             config_data[self.branch_name] = self.previous_commit_hash
             json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
         else:
-            print(Fore.RED + '.vcs/config.json is not exists')
+            print('[red].vcs/config.json is not exists[/red]')
             sys.exit()
 
         # Remove .vcs/commits/<branch_name>/<commit_hash>
         if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}'):
             shutil.rmtree(f'{self.vcs_path}/commits/{self.branch_name}/{self.last_commit_hash}')
         else:
-            print(Fore.RED + f'.vcs/commits/{self.branch_name}/{self.last_commit_hash} not exists')
+            print(f'[red].vcs/commits/{self.branch_name}/{self.last_commit_hash} not exists[/red]')

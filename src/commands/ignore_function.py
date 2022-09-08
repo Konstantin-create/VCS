@@ -7,11 +7,8 @@ Functions:
 
 # Imports
 import os
+from rich import print
 from tools import get_ignore, get_ignore_template, templates
-from colorama import init, Fore
-
-# Colorama init
-init(autoreset=True)
 
 
 class Ignore:
@@ -26,11 +23,11 @@ class Ignore:
         """Function to check is .ignore exists"""
 
         if os.path.exists(f'{self.working_dir}/.ignore'):
-            command = str(input(Fore.YELLOW + '.ignore file is already exists. Rewrote?\ny/N: '))
+            command = str(input('[yellow].ignore file is already exists. Rewrote?\ny/N: [/yellow]'))
             if 'n' in command:
                 return
             print()
-        print(Fore.GREEN + f'.ignore file with base exceptions was created successfully')
+        print(f'[green].ignore file with base exceptions was created successfully[/green]')
         self.set_base_ignores()
         if template:
             self.add_template_ignore(template)
@@ -46,14 +43,14 @@ class Ignore:
 
         ignores = get_ignore(self.working_dir)
         if ignores is None:
-            print(Fore.RED + '.ignore file not found. Try "vcs ignore -n | --new" to create this')
+            print('[red].ignore file not found. Try "vcs ignore -n | --new" to create this[/red]')
             return
         if len(ignores):
-            print(Fore.YELLOW + 'No ignores found')
+            print('[red]No ignores found[/red]')
         print('Ignores:')
         print('  ' + '\n  '.join(ignores))
         print()
-        print(Fore.GREEN + f'Total {len(ignores)} ignores foud')
+        print(f'[green]Total {len(ignores)} ignores found[/green]')
 
     def add_template_ignore(self, template: str) -> None:
         """Function to add template to .ignore"""
@@ -62,7 +59,7 @@ class Ignore:
             self.set_base_ignores()
         template_data = get_ignore_template(template)
         if not template_data:
-            print(Fore.RED + f'No such template: {template}')
+            print(f'[red]No such template: {template}[/red]')
         with open(f'{self.working_dir}/.ignore', 'a') as file:
             file.write(f'{template_data}\n')
 

@@ -14,14 +14,11 @@ import os
 import sys
 import json
 import shutil
+from rich import print
 from datetime import datetime
-from colorama import init, Fore
 from tools import generate_hash, pretty_hash
 from tools import get_branch_name, is_vcs_initialized, last_commit_hash
 from tools import encode_file
-
-# Colorama init
-init(autoreset=True)
 
 
 class Commit:
@@ -59,9 +56,9 @@ class Commit:
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
         if hard_commit:
-            print(f'[{self.branch_name} {Fore.RED + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+            print(f'[{self.branch_name} [red]{pretty_hash(commit_hash)}[/red]] {self.message}')
         else:
-            print(f'[{self.branch_name} {Fore.GREEN + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+            print(f'[{self.branch_name} [green]{pretty_hash(commit_hash)}[/green]] {self.message}')
         print(f' {len(created_objects)} object have been created')
 
     def child_commit(self):
@@ -78,7 +75,7 @@ class Commit:
         config_data[self.branch_name] = commit_hash
         json.dump(config_data, open(f'{self.vcs_path}/config.json', 'w'))
 
-        print(f'[{self.branch_name} {Fore.YELLOW + pretty_hash(commit_hash) + Fore.WHITE}] {self.message}')
+        print(f'[{self.branch_name} [yellow]{pretty_hash(commit_hash)}[/yellow]] {self.message}')
         print(f' {len(created_objects)} objects have been created')
 
     def hard_commit(self):
@@ -99,7 +96,7 @@ class Commit:
         """Function to get list of tracked files"""
 
         if not os.path.exists(self.vcs_path + '/tracked_files.json'):
-            print(Fore.RED + 'No tracked files found try "vcs add <file_name> | -A | ."')
+            print('[red]No tracked files found try "vcs add <file_name> | -A | ."[/red]')
             sys.exit()
         return json.load(open(self.vcs_path + '/tracked_files.json'))
 
@@ -116,7 +113,7 @@ class Commit:
         """Function to get path to changed files"""
 
         if not os.path.exists(self.vcs_path + '/objects'):
-            print(Fore.RED + '.vcs/objects directory not found. Try "vcs init"')
+            print('[red].vcs/objects directory not found. Try "vcs init"[/red]')
             sys.exit()
 
         created_objects = []
@@ -137,7 +134,7 @@ class Commit:
                     deleted_objects.append(key)
         if not deleted_objects:
             if not len(created_objects):
-                print(Fore.YELLOW + 'Repo is already up to date')
+                print('[yellow]Repo is already up to date[/yellow]')
         else:
             print('Deleted objects:')
             print('  ' + '  '.join(deleted_objects))
@@ -148,7 +145,7 @@ class Commit:
         """Create commit dir and commit_info file"""
 
         if os.path.exists(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}'):
-            print(Fore.RED + 'Repo is already up to date')
+            print('[red]Repo is already up to date[/red]')
             sys.exit()
         os.mkdir(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}')
         with open(f'{self.vcs_path}/commits/{self.branch_name}/{commit_hash}/commit_info.json', 'w') as file:

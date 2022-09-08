@@ -11,10 +11,7 @@ Functions:
 import os
 import json
 import shutil
-from colorama import init, Fore
-
-# Colorama init
-init(autoreset=True)
+from rich import print
 
 
 class Init:
@@ -27,13 +24,13 @@ class Init:
         self.quiet = quiet
         self.create_vcs_dir()
         if not quiet:
-            print(Fore.GREEN + '\nVCS initialized successfully')
+            print('[green]\nVCS initialized successfully[/green]')
 
     def create_vcs_dir(self) -> None:
         """Function to create .vcs dir in working dir"""
 
         if os.path.exists(f'{self.run_path}/.vcs'):
-            print(Fore.YELLOW + 'In this directory, the version control system is already initialized')
+            print('[yellow]In this directory, the version control system is already initialized[/yellow]')
             command = input('Recreate .vcs folder? yes/No: ').strip().lower()
             if 'n' in command:
                 return
@@ -56,7 +53,7 @@ class Init:
             Where im going to save current branch and list of branch names"""
 
         if not self.quiet:
-            print(Fore.YELLOW + f'Set main branch as {self.branch_name}')
+            print(f'[yellow]Set main branch as {self.branch_name}[/yellow]')
         config_data = {main_branch: self.branch_name}
         with open(self.run_path + '/.vcs/config.json', 'w') as file:
             json.dump(config_data, file, indent=4)
