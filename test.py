@@ -1,10 +1,3 @@
-"""
-In case with arg parser I should split some functions, like:
-    - In add function -c and -l flags will be going in other command, which will manage only this params,
-        and this isn't good...
-"""
-
-
 import argparse
 
 parser = argparse.ArgumentParser()
