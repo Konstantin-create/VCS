@@ -28,6 +28,11 @@ def reset(args):
     print(args)
 
 
+def rollback(args):
+    print('Rollback')
+    print(args)
+
+
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
 init_parser.add_argument(
@@ -88,10 +93,19 @@ commit_parser.set_defaults(func=commit)
 reset_parser = subparsers.add_parser('reset', help='Command to reset last commit')
 reset_parser.add_argument(
     '-v', '--verbose',
-    nargs='?', default='True',
+    nargs='?', default=True,
     help='rollback to last commit in verbose mode'
 )
 reset_parser.set_defaults(func=reset)
+
+# Rollback parser
+rollback_parser = subparsers.add_parser('rollback', help='Command to rollback to last commit')
+rollback_parser.add_argument(
+    '-v', '--verbose',
+    nargs='?', default=True,
+    help='rollback to last commit in verbose mode'
+)
+rollback_parser.set_defaults(func=rollback)
 
 if __name__ == '__main__':
     args = parser.parse_args()
