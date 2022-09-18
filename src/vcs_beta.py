@@ -23,6 +23,11 @@ def commit(args):
     print(args)
 
 
+def reset(args):
+    print('Reset')
+    print(args)
+
+
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
 init_parser.add_argument(
@@ -78,6 +83,15 @@ commit_parser.add_argument(
     help='commit in hard mode(remove previous commits)'
 )
 commit_parser.set_defaults(func=commit)
+
+# Reset parser
+reset_parser = subparsers.add_parser('reset', help='Command to reset last commit')
+reset_parser.add_argument(
+    '-v', '--verbose',
+    nargs='?', default='True',
+    help='rollback to last commit in verbose mode'
+)
+reset_parser.set_defaults(func=reset)
 
 if __name__ == '__main__':
     args = parser.parse_args()
