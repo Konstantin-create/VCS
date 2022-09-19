@@ -32,8 +32,14 @@ def rollback(args):
     print('Rollback')
     print(args)
 
+
 def checkout(args):
     print('Checkout')
+    print(args)
+
+
+def branch(args):
+    print('Branch')
     print(args)
 
 
@@ -122,6 +128,15 @@ checkout_parser.add_argument(
     help='create branch and switch'
 )
 checkout_parser.set_defaults(func=checkout)
+
+# Branch parser
+branch_parser = subparsers.add_parser('branch', help='Command to modify branches')
+branch_parser.add_argument(
+    '-l', '--list',
+    nargs='?', default=True,
+    help='command to modify branches'
+)
+branch_parser.set_defaults(func=branch)
 
 if __name__ == '__main__':
     args = parser.parse_args()
