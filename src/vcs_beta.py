@@ -32,6 +32,10 @@ def rollback(args):
     print('Rollback')
     print(args)
 
+def checkout(args):
+    print('Checkout')
+    print(args)
+
 
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
@@ -106,6 +110,18 @@ rollback_parser.add_argument(
     help='rollback to last commit in verbose mode'
 )
 rollback_parser.set_defaults(func=rollback)
+
+# Checkout parser
+checkout_parser = subparsers.add_parser('checkout', help='Switch branches')
+checkout_parser.add_argument(
+    '-b', '--branch',
+    help='switch branch'
+)
+checkout_parser.add_argument(
+    '-n', '--new',
+    help='create branch and switch'
+)
+checkout_parser.set_defaults(func=checkout)
 
 if __name__ == '__main__':
     args = parser.parse_args()
