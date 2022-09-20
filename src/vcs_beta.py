@@ -141,6 +141,14 @@ branch_parser.add_argument(
     nargs='?', default=True,
     help='command to modify branches'
 )
+branch_parser.add_argument(
+    '-n', '--new',
+    help='create new branch'
+)
+branch_parser.add_argument(
+    '-d', '--delete',
+    help='remove branch'
+)
 branch_parser.set_defaults(func=branch)
 
 # Merge parser
