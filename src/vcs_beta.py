@@ -43,6 +43,11 @@ def branch(args):
     print(args)
 
 
+def merge(args):
+    print('Merge')
+    print(args)
+
+
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
 init_parser.add_argument(
@@ -137,6 +142,14 @@ branch_parser.add_argument(
     help='command to modify branches'
 )
 branch_parser.set_defaults(func=branch)
+
+# Merge parser
+merge_parser = subparsers.add_parser('merge', help='Command to merge branches')
+merge_parser.add_argument(
+    'branch_name',
+    help='merge branch_name with current branch in rebase mode'
+)
+merge_parser.set_defaults(merge)
 
 if __name__ == '__main__':
     args = parser.parse_args()
