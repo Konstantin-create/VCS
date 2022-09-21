@@ -1,6 +1,8 @@
 """In this file I'm gonna create some skeletons for commands using arg parser"""
 
 import argparse
+from re import sub
+from shutil import ignore_patterns
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(title='subcommands',
@@ -46,6 +48,10 @@ def branch(args):
 def merge(args):
     print('Merge')
     print(args)
+
+def ignore(args):
+    print('Ignore')
+    prnint(args)
 
 
 # Init parser
@@ -158,6 +164,28 @@ merge_parser.add_argument(
     help='merge branch_name with current branch in rebase mode'
 )
 merge_parser.set_defaults(merge)
+
+# Ignore parser
+ignore_parser = subparsers.add_parser('ignore', help='Command to modify ignore file')
+ignore_parser.add_argument(
+    '-tl', '--template-list',
+    nargs='?', default=True,
+    help='print list  of templates'
+)
+ignore_parser.add_argument(
+    '-l', '--list',
+    nargs='?', default=True,
+    help='get list of ignores'
+)
+ignore_parser.add_argument(
+    '-n', '--new',
+    help='create .ignore file with base ignores'
+)
+ignore_parser.add_argument(
+    '-d', '--default',
+    help='create .ignore file with base ignores and template'
+)
+ignore_parser.set_defaults(func=ignore)
 
 if __name__ == '__main__':
     args = parser.parse_args()
