@@ -1,6 +1,7 @@
 """In this file I'm gonna create some skeletons for commands using arg parser"""
 
 import argparse
+from email.policy import default
 from re import sub
 from shutil import ignore_patterns
 
@@ -186,6 +187,15 @@ ignore_parser.add_argument(
     help='create .ignore file with base ignores and template'
 )
 ignore_parser.set_defaults(func=ignore)
+
+
+# Log parser
+log_parser = subparsers.add_parser('log', help='Command to print info about commits', default=True)
+log_parser.add_argument(
+    '-a', '--all',
+    nargs='?', default=True,
+    help='print all commits' 
+)
 
 if __name__ == '__main__':
     args = parser.parse_args()
