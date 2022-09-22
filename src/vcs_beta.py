@@ -172,7 +172,7 @@ merge_parser.add_argument(
     'branch_name',
     help='merge branch_name with current branch in rebase mode'
 )
-merge_parser.set_defaults(merge)
+merge_parser.set_defaults(func=merge)
 
 # Ignore parser
 ignore_parser = subparsers.add_parser('ignore', help='Command to modify ignore file')
@@ -197,7 +197,7 @@ ignore_parser.add_argument(
 ignore_parser.set_defaults(func=ignore)
 
 # Log parser
-log_parser = subparsers.add_parser('log', help='Command to print info about commits', default=True)
+log_parser = subparsers.add_parser('log', help='Command to print info about commits')
 log_parser.add_argument(
     '-a', '--all',
     nargs='?', default=True,
@@ -207,7 +207,7 @@ log_parser.add_argument(
 # Status parser
 status_parser = subparsers.add_parser('status', help='command to print current vcs status')
 status_parser.add_argument(
-    '',
+    ' ',
     nargs='?', default=True,
     help='base command to print status'
 )
