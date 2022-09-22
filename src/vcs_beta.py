@@ -98,12 +98,12 @@ add_parser.add_argument(
     nargs='?', default=True,
     help='add files in tracked list in verbose mode'
 )
-# Error in flag -f
-# add_parser.add_argument(
-#     '-f', '--force',
-#     nargs='?', default=True, required=False,
-#     help='add files in tracked list in force mode'
-# )
+# Error in flag -f. If I change it to -F it works...
+add_parser.add_argument(
+    '-F', '--force',
+    nargs='?', default=True, required=False,
+    help='add files in tracked list in force mode'
+)
 add_parser.set_defaults(func=add)
 
 # Commit parser
