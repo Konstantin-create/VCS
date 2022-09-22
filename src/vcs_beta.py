@@ -1,7 +1,11 @@
 """In this file I'm gonna create some skeletons for commands using arg parser"""
 
+import os
 import argparse
 
+from commands import *
+
+cwd = os.getcwd()
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(title='subcommands',
                                    description='valid subcommands',
@@ -9,8 +13,11 @@ subparsers = parser.add_subparsers(title='subcommands',
 
 
 def init(args):
-    print('Init')
-    print(args)
+    Init(
+        cwd,
+        base_branch=args.branch or 'main',
+        quiet=False or args.quiet
+    )
 
 
 def add(args):
@@ -66,8 +73,9 @@ def check(args):
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
 init_parser.add_argument(
-    '-q', '--quiet', default=True,
-    metavar='quiet', dest='mode',
+    '-q', '--quiet',
+    action='store_true',
+    dest='quiet',
     help='initialize vcs in quiet mode'
 )
 init_parser.add_argument(
