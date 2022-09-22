@@ -48,6 +48,21 @@ def merge(args):
     print(args)
 
 
+def ignore(args):
+    print('Ignore')
+    print(args)
+
+
+def status(args):
+    print('Status')
+    print(args)
+
+
+def check(args):
+    print('Check')
+    print(args)
+
+
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
 init_parser.add_argument(
@@ -157,7 +172,60 @@ merge_parser.add_argument(
     'branch_name',
     help='merge branch_name with current branch in rebase mode'
 )
-merge_parser.set_defaults(merge)
+merge_parser.set_defaults(func=merge)
+
+# Ignore parser
+ignore_parser = subparsers.add_parser('ignore', help='Command to modify ignore file')
+ignore_parser.add_argument(
+    '-tl', '--template-list',
+    nargs='?', default=True,
+    help='print list  of templates'
+)
+ignore_parser.add_argument(
+    '-l', '--list',
+    nargs='?', default=True,
+    help='get list of ignores'
+)
+ignore_parser.add_argument(
+    '-n', '--new',
+    help='create .ignore file with base ignores'
+)
+ignore_parser.add_argument(
+    '-d', '--default',
+    help='create .ignore file with base ignores and template'
+)
+ignore_parser.set_defaults(func=ignore)
+
+# Log parser
+log_parser = subparsers.add_parser('log', help='Command to print info about commits')
+log_parser.add_argument(
+    '-a', '--all',
+    nargs='?', default=True,
+    help='print all commits'
+)
+
+# Status parser
+status_parser = subparsers.add_parser('status', help='command to print current vcs status')
+status_parser.add_argument(
+    ' ',
+    nargs='?', default=True,
+    help='base command to print status'
+)
+status_parser.set_defaults(func=status)
+
+# Check parser
+check_parser = subparsers.add_parser('check', help='Command to check vcs state')
+check_parser.add_argument(
+    '-c', '--commits',
+    nargs='?', default=True,
+    help='command to check vcs state'
+)
+check_parser.add_argument(
+    '-b', '--branches',
+    nargs='?', default=True,
+    help='check is branches valid'
+)
+check_parser.set_defaults(func=check)
 
 if __name__ == '__main__':
     args = parser.parse_args()
