@@ -61,6 +61,11 @@ def status(args):
     print(args)
 
 
+def check(args):
+    print('Check')
+    print(args)
+
+
 # Init parser
 init_parser = subparsers.add_parser('init', help='Initial command')
 init_parser.add_argument(
@@ -210,6 +215,20 @@ status_parser.add_argument(
     help='base command to print status'
 )
 status_parser.set_defaults(func=status)
+
+# Check parser
+check_parser = subparsers.add_parser('check', help='Command to check vcs state')
+check_parser.add_argument(
+    '-c', '--commits',
+    nargs='?', default=True,
+    help='command to check vcs state'
+)
+check_parser.add_argument(
+    '-b', '--branches',
+    nargs='?', default=True,
+    help='check is branches valid'
+)
+check_parser.set_defaults(func=check)
 
 if __name__ == '__main__':
     args = parser.parse_args()
