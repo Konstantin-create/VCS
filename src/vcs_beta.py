@@ -21,8 +21,14 @@ def init(args):
 
 
 def add(args):
-    print('Add')
-    print(args)
+    add = Add(cwd)
+    if args.list:
+        add.tracked_files_list()
+    elif args.clean:
+        add.tracked_files_clean()
+    else:
+        for file in args.file:
+            add.add_tracked_file(file, False or args.verbose, False or args.force)
 
 
 def commit(args):
@@ -85,31 +91,36 @@ init_parser.add_argument(
 )
 init_parser.set_defaults(func=init)
 
+# Add Parser
 add_parser = subparsers.add_parser('add', help='Command to add files in tracked list')
-add_parser.add_argument(
-    '-f', '--file',
-    metavar='filename', nargs='+', required=False,
+add_parser.add_argument(  # Replace with subparser. Remove flag -f
+    '-f', '--filename',
+    metavar='filename', nargs='+',
     help='add(use . for add all files) file in a tracked list'
 )
 add_parser.add_argument(
     '-l', '--list',
-    nargs='?', default=True,
+    action='store_true',
+    dest='list',
     help='print list of tracked files'
 )
 add_parser.add_argument(
     '-c', '--clean',
-    nargs='?', default=True,
+    action='store_true',
+    dest='clean',
     help='clean list of tracked files'
 )
 add_parser.add_argument(
     '-v', '--verbose',
-    nargs='?', default=True,
+    action='store_true',
+    dest='verbose',
     help='add files in tracked list in verbose mode'
 )
 # Error in flag -f. If I change it to -F it works...
 add_parser.add_argument(
     '-F', '--force',
-    nargs='?', default=True, required=False,
+    action='store_true',
+    dest='force',
     help='add files in tracked list in force mode'
 )
 add_parser.set_defaults(func=add)
