@@ -1,9 +1,6 @@
 """In this file I'm gonna create some skeletons for commands using arg parser"""
 
 import argparse
-from email.policy import default
-from re import sub
-from shutil import ignore_patterns
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(title='subcommands',
