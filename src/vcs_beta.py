@@ -50,9 +50,15 @@ def merge(args):
     print('Merge')
     print(args)
 
+
 def ignore(args):
     print('Ignore')
-    prnint(args)
+    print(args)
+
+
+def status(args):
+    print('Status')
+    print(args)
 
 
 # Init parser
@@ -188,14 +194,22 @@ ignore_parser.add_argument(
 )
 ignore_parser.set_defaults(func=ignore)
 
-
 # Log parser
 log_parser = subparsers.add_parser('log', help='Command to print info about commits', default=True)
 log_parser.add_argument(
     '-a', '--all',
     nargs='?', default=True,
-    help='print all commits' 
+    help='print all commits'
 )
+
+# Status parser
+status_parser = subparsers.add_parser('status', help='command to print current vcs status')
+status_parser.add_argument(
+    '',
+    nargs='?', default=True,
+    help='base command to print status'
+)
+status_parser.set_defaults(func=status)
 
 if __name__ == '__main__':
     args = parser.parse_args()
