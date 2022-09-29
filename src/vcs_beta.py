@@ -12,6 +12,7 @@ Parser for commands:
     - Merge command(merge_router)
 
     - Ignore command(ignore_router)
+    - Log command(log_parser)
     - Status command(status_command)
     - Check command(check_command)
 """
