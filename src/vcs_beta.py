@@ -80,9 +80,9 @@ def ignore_router(args: argparse.Namespace):
         ignore.create_file(args.template)
 
 
-def status_router(args):
-    print('Status')
-    print(args)
+def status_router(args: argparse.Namespace):
+    status = Status(cwd)
+    status.status()
 
 
 def check_router(args):
