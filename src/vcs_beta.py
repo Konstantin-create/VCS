@@ -16,7 +16,7 @@ def init_router(args):
     Init(
         cwd,
         base_branch=args.branch or 'main',
-        quiet=False or args.quiet
+        quiet=bool(args.quiet)
     )
 
 
@@ -28,7 +28,7 @@ def add_router(args):
         add.tracked_files_clean()
     else:
         for file in args.file:
-            add.add_tracked_file(file, False or args.verbose, False or args.force)
+            add.add_tracked_file(file, bool(args.verbose), bool(args.force))
 
 
 def commit_router(args):
@@ -38,7 +38,7 @@ def commit_router(args):
 
 def reset_router(args):
     reset = Reset(cwd)
-    reset.last_commit(verbose=args.verbose)
+    reset.last_commit(verbose=bool(args.verbose))
 
 
 def rollback_router(args):
@@ -47,8 +47,8 @@ def rollback_router(args):
 
 
 def checkout_router(args):
-    print('Checkout')
-    print(args)
+    checkout = CheckOut(cwd)
+    checkout.checkout(args.branch, create_new_branch=bool(args.new))
 
 
 def branch_router(args):
@@ -89,13 +89,14 @@ init_parser.add_argument(
     metavar='quiet', dest='branch',
     help='default branch name'
 )
-init_parser.set_defaults(func=init)
+init_parser.set_defaults(func=init_router)
 
 # Add Parser
 add_parser = subparsers.add_parser('add', help='Command to add files in tracked list')
 add_parser.add_argument(  # Replace with subparser. Remove flag -f
     '-f', '--filename',
     metavar='filename', nargs='+',
+    dest='filename',
     help='add(use . for add all files) file in a tracked list'
 )
 add_parser.add_argument(
@@ -123,7 +124,7 @@ add_parser.add_argument(
     dest='force',
     help='add files in tracked list in force mode'
 )
-add_parser.set_defaults(func=add)
+add_parser.set_defaults(func=add_router)
 
 # Commit parser
 commit_parser = subparsers.add_parser('commit', help='Command to commit changes')
@@ -138,7 +139,7 @@ commit_parser.add_argument(
     dest='hard',
     help='commit in hard mode(remove previous commits)'
 )
-commit_parser.set_defaults(func=commit)
+commit_parser.set_defaults(func=commit_router)
 
 # Reset parser
 reset_parser = subparsers.add_parser('reset', help='Command to reset last commit')
@@ -148,7 +149,7 @@ reset_parser.add_argument(
     dest='verbose',
     help='rollback to last commit in verbose mode'
 )
-reset_parser.set_defaults(func=reset)
+reset_parser.set_defaults(func=reset_router)
 
 # Rollback parser
 rollback_parser = subparsers.add_parser('rollback', help='Command to rollback to last commit')
@@ -158,19 +159,22 @@ rollback_parser.add_argument(
     dest='verbose',
     help='rollback to last commit in verbose mode'
 )
-rollback_parser.set_defaults(func=rollback)
+rollback_parser.set_defaults(func=rollback_router)
 
 # Checkout parser
-checkout_parser = subparsers.add_parser('checkout', help='Switch branches')
+checkout_parser = subparsers.add_parser('checkout',
+                                        help='Switch branches')  # todo: rewrite with subparser(remove flags -b and -n)
 checkout_parser.add_argument(
     '-b', '--branch',
+    dest='branch',
     help='switch branch'
 )
 checkout_parser.add_argument(
     '-n', '--new',
+    dest='new',
     help='create branch and switch'
 )
-checkout_parser.set_defaults(func=checkout)
+checkout_parser.set_defaults(func=checkout_router)
 
 # Branch parser
 branch_parser = subparsers.add_parser('branch', help='Command to modify branches')
@@ -187,7 +191,7 @@ branch_parser.add_argument(
     '-d', '--delete',
     help='remove branch'
 )
-branch_parser.set_defaults(func=branch)
+branch_parser.set_defaults(func=branch_router)
 
 # Merge parser
 merge_parser = subparsers.add_parser('merge', help='Command to merge branches')
@@ -195,7 +199,7 @@ merge_parser.add_argument(
     'branch_name',
     help='merge branch_name with current branch in rebase mode'
 )
-merge_parser.set_defaults(func=merge)
+merge_parser.set_defaults(func=merge_router)
 
 # Ignore parser
 ignore_parser = subparsers.add_parser('ignore', help='Command to modify ignore file')
@@ -217,7 +221,7 @@ ignore_parser.add_argument(
     '-d', '--default',
     help='create .ignore file with base ignores and template'
 )
-ignore_parser.set_defaults(func=ignore)
+ignore_parser.set_defaults(func=ignore_router)
 
 # Log parser
 log_parser = subparsers.add_parser('log', help='Command to print info about commits')
@@ -234,7 +238,7 @@ status_parser.add_argument(
     nargs='?', default=True,
     help='base command to print status'
 )
-status_parser.set_defaults(func=status)
+status_parser.set_defaults(func=status_router)
 
 # Check parser
 check_parser = subparsers.add_parser('check', help='Command to check vcs state')
@@ -248,7 +252,7 @@ check_parser.add_argument(
     nargs='?', default=True,
     help='check is branches valid'
 )
-check_parser.set_defaults(func=check)
+check_parser.set_defaults(func=check_router)
 
 if __name__ == '__main__':
     args = parser.parse_args()
