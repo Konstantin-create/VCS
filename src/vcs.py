@@ -1,240 +1,357 @@
-#!/usr/bin/env python3.10
 """
-Program init function
-Functions:
-    - Get command
-    - Parse command
-    - Call class/function from commands/ dir
+Parser for commands:
+    - Init command(init_router)
+    - Add command(add_router)
+    - Commit command(commit_router)
+
+    - Reset command(reset_router)
+    - Rollback command(rollback_router)
+
+    - Checkout command(checkout_router)
+    - Branch command(branch_router)
+    - Merge command(merge_router)
+
+    - Ignore command(ignore_router)
+    - Log command(log_parser)
+    - Status command(status_command)
+    - Check command(check_command)
 """
 
-# Imports
+import os
+import argparse
+
 from commands import *
-from rich import print
-from tools.help_tools import *
-from tools.flags_tools import *
-from tools import is_vcs_initialized, get_ignore
 
-# Get run args
-args = sys.argv
+cwd = os.getcwd()
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers(title='subcommands',
+                                   description='valid subcommands',
+                                   help='description')
 
 
-# Functions
-def main():
-    """Function to parse args and call the function"""
+def init_router(args: argparse.Namespace):
+    """Handler for init parser"""
 
-    cwd = os.getcwd()
-    if not len(args) - 1:
-        print(vcs_text)
-        return
+    Init(
+        cwd,
+        base_branch=args.branch or 'main',
+        quiet=bool(args.quiet)
+    )
 
-    if args[1].lower() == 'init':
-        quiet = False
-        if '-quiet' in args or '-q' in args:
-            quiet = True
-        if '--help' in args or '-h' in args:
-            print(init_text)
-        elif '-b' in args:
-            if len(args) <= args.index('-b') + 1:
-                print('[red]If you gonna use -b flag - Branch name is required[/red]')
-                sys.exit()
-            Init(cwd, base_branch=args[args.index('-b') + 1], quiet=quiet)
-        else:
-            Init(cwd, quiet=quiet)
 
+def add_router(args: argparse.Namespace):
+    """Handler for add parser"""
+
+    add = Add(cwd)
+    if args.list:
+        add.tracked_files_list()
+    elif args.clean:
+        add.tracked_files_clean()
     else:
-        if not is_vcs_initialized(cwd):
-            print('[red]VCS is not initialized try "vcs init"[/red]')
-            sys.exit()
-        if args[1].lower() == 'add':
-            if '--help' in args or '-h' in args or len(args) == 2:
-                print(add_text)
-            else:
-                if len(args) <= args.index('add') + 1:
-                    print('[red]File name or . | -A is required[/red]')
-                    sys.exit()
-                add = Add(cwd)
-                if args[args.index('add') + 1] == '-l' or args[args.index('add') + 1] == '--list':
-                    add.tracked_files_list()
-                elif args[args.index('add') + 1] == '-c' or args[args.index('add') + 1] == '--clean':
-                    print('[yellow]Cleaning...[/yellow]')
-                    add.tracked_files_clean()
-                else:
-                    verbose = False
-                    force = False
-                    if '-v' in args or '--verbose' in args:
-                        verbose = True
-                    if '-f' in args or '--force' in args:
-                        force = True
-                    add.add_tracked_file(args[args.index('add') + 1], verbose, force)
+        for file in args.file:
+            add.add_tracked_file(file, bool(args.verbose), bool(args.force))
 
-        elif args[1].lower() == 'commit':
-            if '--help' in args or '-h' in args or len(args) == 2:
-                print(commit_text)
-            elif '-t' in args:
-                if len(args) <= args.index('-t') + 1:
-                    print('[red]Commit message is required[/red]')
-                    sys.exit()
 
-                if args[args.index('-t') + 1] not in commit_flags:
-                    commit = Commit(cwd, args[args.index('-t') + 1])
-                    if '--hard' in args or '--HARD' in args:
-                        commit.hard_commit()
-                    else:
-                        commit.commit()
-                else:
-                    print('[red]Commit text error. Use "vcs commit --help" for help[/red]')
-            else:
-                print('[red]Command not found. User "vcs commit --help" for help[/red]')
+def commit_router(args: argparse.Namespace):
+    """Handler for commit parser"""
 
-        elif args[1].lower() == 'ignore':
-            ignore = Ignore(cwd)
-            if '-h' in args or '--help' in args or len(args) == 2:
-                print(ignore_text)
-            if '-tl' in args or '--template-list' in args:
-                ignore.get_template_list()
-            elif '-n' in args or '--new' in args:
-                template = False
-                if '-t' in args and len(args) >= args.index('-t') + 1:
-                    template = args[args.index('-t') + 1]
-                elif '--template' in args and len(args) >= args.index('--template') + 1:
-                    template = args[args.index('--template') + 1]
-                ignore.create_file(template=template)
-            elif '-l' in args or '--list' in args:
-                ignore.get_ignore_list()
+    commit = Commit(cwd, args.text)
+    commit.hard_commit() if args.hard else commit.commit()
 
-        elif args[1].lower() == 'log':
-            if '-h' in args or '--help' in args:
-                print(log_text)
-                sys.exit()
-            log = Log(cwd)
-            if '-a' in args or '--all' in args:
-                verbose = False
-                if '-v' in args or '--verbose' in args:
-                    verbose = True
-                log.get_all_commits(verbose)
-            else:
-                if len(args) >= 3:
-                    log.get_commit_info(commit_hash=args[2])
-                else:
-                    log.get_commit_info()
 
-        elif args[1].lower() == 'reset':
-            if '-h' in args or '--help' in args:
-                print(reset_text)
-                return
+def reset_router(args: argparse.Namespace):
+    """Handler for reset parser"""
 
-            verbose = False
-            if '-v' in args or '--verbose' in args:
-                verbose = True
-            reset = Reset(cwd)
-            reset.last_commit(verbose=verbose)
+    reset = Reset(cwd)
+    reset.last_commit(verbose=bool(args.verbose))
 
-        elif args[1].lower() == 'rollback':
-            if '-h' in args or '--help' in args:
-                print(rollback_text)
-                return
 
-            verbose = False
-            if '-v' in args or '--verbose' in args:
-                verbose = True
-            rollback = Rollback(cwd)
-            rollback.rollback(verbose)
+def rollback_router(args: argparse.Namespace):
+    """Handler for rollback parser"""
 
-        elif args[1].lower() == 'status':
-            if '-h' in args or '--help' in args:
-                print(status_text)
-                return
-            status = Status(cwd)
-            status.status()
+    rollback = Rollback(cwd)
+    rollback.rollback(verbose=args.verbose)
 
-        elif args[1].lower() == 'checkout':
-            if '-h' in args or '--help' in args or len(args) == 2:
-                print(checkout_text)
-                return
 
-            branch_name = ''
-            create_new = False
-            if len(args) >= 3 and args[2] not in checkout_flags:
-                branch_name = args[2]
-            elif '-b' in args or '--branch' in args:
-                if '-b' in args:
-                    branch_flag = '-b'
-                else:
-                    branch_flag = '--branch'
+def checkout_router(args: argparse.Namespace):
+    """Handler for checkout parser"""
 
-                if len(args) <= args.index(branch_flag):
-                    print('[red]No branch name found. Try "vcs checkout -h | --help"[/red]')
-                    return
-                branch_name = args[args.index(branch_flag) + 1]
-                create_new = True
-            if not len(branch_name):
-                print('[red]No branch name found. Try "vcs checkout -h | --help"[/red]')
-                return
+    checkout = CheckOut(cwd)
+    checkout.checkout(args.branch, create_new_branch=bool(args.new))
 
-            checkout = CheckOut(cwd)
-            checkout.checkout(branch_name, create_new_branch=create_new)
 
-        elif args[1] == 'branch':
-            if '-h' in args or '--help' in args:
-                print(branch_text)
-                return
-            branch = Branch(cwd)
+def branch_router(args: argparse.Namespace):
+    """Handler for branch parser"""
 
-            if '-l' in args or '--list' in args or len(args) == 2:
-                branch.branches_list()
-                return
-            elif '-n' in args or '--new' in args:
-                if '-n' in args:
-                    command_flag = '-n'
-                else:
-                    command_flag = '--new'
-                if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
-                    print('[red]Branch name not found[/red]')
-                    return
-                branch.create_new(args[args.index(command_flag) + 1])
+    branch = Branch(cwd)
+    if args.list:
+        branch.branches_list()
+        return
+    if args.new:
+        branch.create_new(args.new)
+        return
+    if args.delete:
+        branch.remove_branch(args.delete, bool(args.force))
 
-            elif '-d' in args or '--delete' in args:
-                force = False
 
-                if '-d' in args:
-                    command_flag = '-d'
-                else:
-                    command_flag = '--delete'
+def merge_router(args: argparse.Namespace):
+    """Handler for merge parser"""
 
-                if len(args) <= args.index(command_flag) or args[args.index(command_flag) + 1] in branch_flags:
-                    print('[red]Branch name not found[/red]')
-                    return
-                if '-f' in args or '--force' in args:
-                    force = True
-                branch.remove_branch(args[args.index(command_flag) + 1], force=force)
+    merge = Merge(cwd)
+    merge.merge(args.branch_name)
 
-        elif args[1].lower() == 'check':
-            if '-h' in args or '--help' in args or len(args) == 2:
-                print(check_text)
-                return
 
-            checker = Checker(cwd)
-            if '-c' in args or '--commits' in args:
-                checker.check_commits_chain()
-            elif '-b' in args or '--branch' in args:
-                checker.check_branches()
+def ignore_router(args: argparse.Namespace):
+    """Handler for ignore parser"""
 
-        elif args[1].lower() == 'merge':
-            if '-h' in args or '--help' in args or len(args) == 2:
-                print(merge_text)
-                return
-            merge = Merge(cwd)
-            if args[2] not in merge_flags:
-                merge.merge(args[2])
-            else:
-                print(f'[red]Branch {args[2]} not found. Use vcs merge -h | --help for help[/red]')
+    ignore = Ignore(cwd)
+    if args.template_list:
+        ignore.get_template_list()
+        return
+    if args.list:
+        ignore.get_ignore_list()
+        return
+    if args.new:
+        ignore.create_file(args.template)
 
-        elif args[1].lower() == '-h' or args[1].lower() == '--help' or len(args) == 1:
-            print(vcs_text)
 
-        else:
-            print(f'[red]No such command {args[1]}[/red]')
+def log_router(args: argparse.Namespace):
+    """Handler for log parser"""
 
+    log = Log(cwd)
+    if args.print_all:
+        log.get_all_commits(bool(args.verbose))
+        return
+    log.get_commit_info(args.commit) if args.commit else log.get_commit_info()
+
+
+def status_router(args: argparse.Namespace):
+    """Handler for status parser"""
+
+    status = Status(cwd)
+    status.status()
+
+
+def check_router(args):
+    """Handler for check parser"""
+
+    checker = Checker(cwd)
+    if args.commits:
+        checker.check_commits_chain()
+    if args.branches:
+        checker.check_branches()
+
+
+# Init parser
+init_parser = subparsers.add_parser('init', help='Initial command')
+init_parser.add_argument(
+    '-q', '--quiet',
+    action='store_true',
+    dest='quiet',
+    help='initialize vcs in quiet mode'
+)
+init_parser.add_argument(
+    '-b', '--branch',
+    metavar='quiet', dest='branch',
+    help='default branch name'
+)
+init_parser.set_defaults(func=init_router)
+
+# Add Parser
+add_parser = subparsers.add_parser('add', help='Command to add files in tracked list')
+add_parser.add_argument(  # todo: Replace with subparser. Remove flag -f
+    '-f', '--filename',
+    metavar='filename', nargs='+',
+    dest='filename',
+    help='add(use . for add all files) file in a tracked list'
+)
+add_parser.add_argument(
+    '-l', '--list',
+    action='store_true',
+    dest='list',
+    help='print list of tracked files'
+)
+add_parser.add_argument(
+    '-c', '--clean',
+    action='store_true',
+    dest='clean',
+    help='clean list of tracked files'
+)
+add_parser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    dest='verbose',
+    help='add files in tracked list in verbose mode'
+)
+# Error in flag -f. If I change it to -F it works...
+add_parser.add_argument(
+    '-F', '--force',
+    action='store_true',
+    dest='force',
+    help='add files in tracked list in force mode'
+)
+add_parser.set_defaults(func=add_router)
+
+# Commit parser
+commit_parser = subparsers.add_parser('commit', help='Command to commit changes')
+commit_parser.add_argument(
+    '-t', '--text',
+    dest='text',
+    help='create commit with message', required=True
+)
+commit_parser.add_argument(
+    '--HARD',
+    action='store_true',
+    dest='hard',
+    help='commit in hard mode(remove previous commits)'
+)
+commit_parser.set_defaults(func=commit_router)
+
+# Reset parser
+reset_parser = subparsers.add_parser('reset', help='Command to reset last commit')
+reset_parser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    dest='verbose',
+    help='rollback to last commit in verbose mode'
+)
+reset_parser.set_defaults(func=reset_router)
+
+# Rollback parser
+rollback_parser = subparsers.add_parser('rollback', help='Command to rollback to last commit')
+rollback_parser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    dest='verbose',
+    help='rollback to last commit in verbose mode'
+)
+rollback_parser.set_defaults(func=rollback_router)
+
+# Checkout parser
+checkout_parser = subparsers.add_parser('checkout',
+                                        help='Switch branches')  # todo: rewrite with subparser(remove flags -b and -n)
+checkout_parser.add_argument(
+    '-b', '--branch',
+    dest='branch',
+    help='switch branch'
+)
+checkout_parser.add_argument(
+    '-n', '--new',
+    dest='new',
+    help='create branch and switch'
+)
+checkout_parser.set_defaults(func=checkout_router)
+
+# Branch parser
+branch_parser = subparsers.add_parser('branch', help='Command to modify branches')
+branch_parser.add_argument(
+    '-l', '--list',
+    action='store_true',
+    dest='list',
+    help='command to modify branches'
+)
+branch_parser.add_argument(
+    '-n', '--new',
+    dest='new',
+    help='create new branch'
+)
+branch_parser.add_argument(
+    '-d', '--delete',
+    dest='delete',
+    help='remove branch'
+)
+branch_parser.add_argument(
+    '-f', '--force',
+    dest='force',
+    action='store_true',
+    help='remove branch in a force mode'
+)
+branch_parser.set_defaults(func=branch_router)
+
+# Merge parser
+merge_parser = subparsers.add_parser('merge', help='Command to merge branches')
+merge_parser.add_argument(
+    'branch_name',
+    help='merge branch_name with current branch in rebase mode'
+)
+merge_parser.set_defaults(func=merge_router)
+
+# Ignore parser
+ignore_parser = subparsers.add_parser('ignore', help='Command to modify ignore file')
+ignore_parser.add_argument(
+    '-tl', '--template-list',
+    dest='template_list',
+    action='store_true',
+    help='print list  of templates'
+)
+ignore_parser.add_argument(
+    '-l', '--list',
+    dest='list',
+    action='store_true',
+    help='get list of ignores'
+)
+ignore_parser.add_argument(
+    '-n', '--new',
+    dest='new',
+    help='create .ignore file with base ignores'
+)
+ignore_parser.add_argument(
+    '-d', '--default',
+    dest='default',
+    help='create .ignore file with base ignores and template'
+)
+ignore_parser.set_defaults(func=ignore_router)
+
+# Log parser
+log_parser = subparsers.add_parser('log', help='Command to print info about commits')
+log_parser.add_argument(
+    '-a', '--all',
+    dest='print_all',
+    action='store_true',
+    help='print all commits'
+)
+log_parser.add_argument(
+    '-v', '--verbose',
+    dest='verbose',
+    action='store_true',
+    help='verbose mode'
+)
+log_parser.add_argument(
+    '-c', '--commit',
+    dest='commit',
+    action='store_true',
+    help='get commit info by hash'
+)
+log_parser.set_defaults(func=log_router)
+
+# Status parser
+status_parser = subparsers.add_parser('status', help='command to print current vcs status')
+status_parser.add_argument(
+    ' ',
+    nargs='?', default=True,
+    help='base command to print status'
+)
+status_parser.set_defaults(func=status_router)
+
+# Check parser
+check_parser = subparsers.add_parser('check', help='Command to check vcs state')
+check_parser.add_argument(
+    '-c', '--commits',
+    dest='commits',
+    action='store_true',
+    help='command to check vcs state'
+)
+check_parser.add_argument(
+    '-b', '--branches',
+    dest='branches',
+    action='store_true',
+    help='check is branches valid'
+)
+check_parser.set_defaults(func=check_router)
 
 if __name__ == '__main__':
-    main()
+    args = parser.parse_args()
+    if not vars(args):
+        parser.print_usage()
+    else:
+        args.func(args)
