@@ -1,4 +1,20 @@
-"""In this file I'm gonna create some skeletons for commands using arg parser"""
+"""
+Parser for commands:
+    - Init command(init_router)
+    - Add command(add_router)
+    - Commit command(commit_router)
+
+    - Reset command(reset_router)
+    - Rollback command(rollback_router)
+
+    - Checkout command(checkout_router)
+    - Branch command(branch_router)
+    - Merge command(merge_router)
+
+    - Ignore command(ignore_router)
+    - Status command(status_command)
+    - Check command(check_command)
+"""
 
 import os
 import argparse
@@ -78,6 +94,14 @@ def ignore_router(args: argparse.Namespace):
         return
     if args.new:
         ignore.create_file(args.template)
+
+
+def log_router(args: argparse.Namespace):
+    log = Log(cwd)
+    if args.print_all:
+        log.get_all_commits(bool(args.verbose))
+        return
+    log.get_commit_info(args.commit) if args.commit else log.get_commit_info()
 
 
 def status_router(args: argparse.Namespace):
@@ -257,9 +281,23 @@ ignore_parser.set_defaults(func=ignore_router)
 log_parser = subparsers.add_parser('log', help='Command to print info about commits')
 log_parser.add_argument(
     '-a', '--all',
-    nargs='?', default=True,
+    dest='print_all',
+    action='store_true',
     help='print all commits'
 )
+log_parser.add_argument(
+    '-v', '--verbose',
+    dest='verbose',
+    action='store_true',
+    help='verbose mode'
+)
+log_parser.add_argument(
+    '-c', '--commit',
+    dest='commit',
+    action='store_true',
+    help='get commit info by hash'
+)
+log_parser.set_defaults(func=log_router)
 
 # Status parser
 status_parser = subparsers.add_parser('status', help='command to print current vcs status')
