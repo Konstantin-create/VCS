@@ -63,9 +63,9 @@ def branch_router(args: argparse.Namespace):
         branch.remove_branch(args.delete, bool(args.force))
 
 
-def merge_router(args):
-    print('Merge')
-    print(args)
+def merge_router(args: argparse.Namespace):
+    merge = Merge(cwd)
+    merge.merge(args.branch_name)
 
 
 def ignore_router(args):
@@ -213,6 +213,8 @@ branch_parser.set_defaults(func=branch_router)
 merge_parser = subparsers.add_parser('merge', help='Command to merge branches')
 merge_parser.add_argument(
     'branch_name',
+    dest='branch_name',
+    required=True,
     help='merge branch_name with current branch in rebase mode'
 )
 merge_parser.set_defaults(func=merge_router)
