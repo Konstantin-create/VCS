@@ -32,8 +32,8 @@ def add(args):
 
 
 def commit(args):
-    print('Commit')
-    print(args)
+    commit = Commit(cwd, args.text)
+    commit.hard_commit() if args.hard else commit.commit()
 
 
 def reset(args):
@@ -129,6 +129,7 @@ add_parser.set_defaults(func=add)
 commit_parser = subparsers.add_parser('commit', help='Command to commit changes')
 commit_parser.add_argument(
     '-t', '--text',
+    dest='text',
     help='create commit with message', required=True
 )
 commit_parser.add_argument(
