@@ -30,6 +30,8 @@ subparsers = parser.add_subparsers(title='subcommands',
 
 
 def init_router(args: argparse.Namespace):
+    """Handler for init parser"""
+
     Init(
         cwd,
         base_branch=args.branch or 'main',
@@ -38,6 +40,8 @@ def init_router(args: argparse.Namespace):
 
 
 def add_router(args: argparse.Namespace):
+    """Handler for add parser"""
+
     add = Add(cwd)
     if args.list:
         add.tracked_files_list()
@@ -49,26 +53,36 @@ def add_router(args: argparse.Namespace):
 
 
 def commit_router(args: argparse.Namespace):
+    """Handler for commit parser"""
+
     commit = Commit(cwd, args.text)
     commit.hard_commit() if args.hard else commit.commit()
 
 
 def reset_router(args: argparse.Namespace):
+    """Handler for reset parser"""
+
     reset = Reset(cwd)
     reset.last_commit(verbose=bool(args.verbose))
 
 
 def rollback_router(args: argparse.Namespace):
+    """Handler for rollback parser"""
+
     rollback = Rollback(cwd)
     rollback.rollback(verbose=args.verbose)
 
 
 def checkout_router(args: argparse.Namespace):
+    """Handler for checkout parser"""
+
     checkout = CheckOut(cwd)
     checkout.checkout(args.branch, create_new_branch=bool(args.new))
 
 
 def branch_router(args: argparse.Namespace):
+    """Handler for branch parser"""
+
     branch = Branch(cwd)
     if args.list:
         branch.branches_list()
@@ -81,11 +95,15 @@ def branch_router(args: argparse.Namespace):
 
 
 def merge_router(args: argparse.Namespace):
+    """Handler for merge parser"""
+
     merge = Merge(cwd)
     merge.merge(args.branch_name)
 
 
 def ignore_router(args: argparse.Namespace):
+    """Handler for ignore parser"""
+
     ignore = Ignore(cwd)
     if args.template_list:
         ignore.get_template_list()
@@ -98,6 +116,8 @@ def ignore_router(args: argparse.Namespace):
 
 
 def log_router(args: argparse.Namespace):
+    """Handler for log parser"""
+
     log = Log(cwd)
     if args.print_all:
         log.get_all_commits(bool(args.verbose))
@@ -106,11 +126,15 @@ def log_router(args: argparse.Namespace):
 
 
 def status_router(args: argparse.Namespace):
+    """Handler for status parser"""
+
     status = Status(cwd)
     status.status()
 
 
 def check_router(args):
+    """Handler for check parser"""
+
     checker = Checker(cwd)
     if args.commits:
         checker.check_commits_chain()
@@ -135,7 +159,7 @@ init_parser.set_defaults(func=init_router)
 
 # Add Parser
 add_parser = subparsers.add_parser('add', help='Command to add files in tracked list')
-add_parser.add_argument(  # Replace with subparser. Remove flag -f
+add_parser.add_argument(  # todo: Replace with subparser. Remove flag -f
     '-f', '--filename',
     metavar='filename', nargs='+',
     dest='filename',
