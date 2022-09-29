@@ -12,7 +12,7 @@ subparsers = parser.add_subparsers(title='subcommands',
                                    help='description')
 
 
-def init(args):
+def init_router(args):
     Init(
         cwd,
         base_branch=args.branch or 'main',
@@ -20,7 +20,7 @@ def init(args):
     )
 
 
-def add(args):
+def add_router(args):
     add = Add(cwd)
     if args.list:
         add.tracked_files_list()
@@ -31,47 +31,47 @@ def add(args):
             add.add_tracked_file(file, False or args.verbose, False or args.force)
 
 
-def commit(args):
+def commit_router(args):
     commit = Commit(cwd, args.text)
     commit.hard_commit() if args.hard else commit.commit()
 
 
-def reset(args):
+def reset_router(args):
     reset = Reset(cwd)
     reset.last_commit(verbose=args.verbose)
 
 
-def rollback(args):
+def rollback_router(args):
     rollback = Rollback(cwd)
     rollback.rollback(verbose=args.verbose)
 
 
-def checkout(args):
+def checkout_router(args):
     print('Checkout')
     print(args)
 
 
-def branch(args):
+def branch_router(args):
     print('Branch')
     print(args)
 
 
-def merge(args):
+def merge_router(args):
     print('Merge')
     print(args)
 
 
-def ignore(args):
+def ignore_router(args):
     print('Ignore')
     print(args)
 
 
-def status(args):
+def status_router(args):
     print('Status')
     print(args)
 
 
-def check(args):
+def check_router(args):
     print('Check')
     print(args)
 
