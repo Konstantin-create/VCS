@@ -37,8 +37,8 @@ def commit(args):
 
 
 def reset(args):
-    print('Reset')
-    print(args)
+    reset = Reset(cwd)
+    reset.last_commit(verbose=args.verbose)
 
 
 def rollback(args):
