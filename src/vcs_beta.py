@@ -68,9 +68,16 @@ def merge_router(args: argparse.Namespace):
     merge.merge(args.branch_name)
 
 
-def ignore_router(args):
-    print('Ignore')
-    print(args)
+def ignore_router(args: argparse.Namespace):
+    ignore = Ignore(cwd)
+    if args.template_list:
+        ignore.get_template_list()
+        return
+    if args.list:
+        ignore.get_ignore_list()
+        return
+    if args.new:
+        ignore.create_file(args.template)
 
 
 def status_router(args):
@@ -213,8 +220,6 @@ branch_parser.set_defaults(func=branch_router)
 merge_parser = subparsers.add_parser('merge', help='Command to merge branches')
 merge_parser.add_argument(
     'branch_name',
-    dest='branch_name',
-    required=True,
     help='merge branch_name with current branch in rebase mode'
 )
 merge_parser.set_defaults(func=merge_router)
@@ -223,20 +228,24 @@ merge_parser.set_defaults(func=merge_router)
 ignore_parser = subparsers.add_parser('ignore', help='Command to modify ignore file')
 ignore_parser.add_argument(
     '-tl', '--template-list',
-    nargs='?', default=True,
+    dest='template_list',
+    action='store_true',
     help='print list  of templates'
 )
 ignore_parser.add_argument(
     '-l', '--list',
-    nargs='?', default=True,
+    dest='list',
+    action='store_true',
     help='get list of ignores'
 )
 ignore_parser.add_argument(
     '-n', '--new',
+    dest='new',
     help='create .ignore file with base ignores'
 )
 ignore_parser.add_argument(
     '-d', '--default',
+    dest='default',
     help='create .ignore file with base ignores and template'
 )
 ignore_parser.set_defaults(func=ignore_router)
