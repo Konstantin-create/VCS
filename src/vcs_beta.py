@@ -42,8 +42,8 @@ def reset(args):
 
 
 def rollback(args):
-    print('Rollback')
-    print(args)
+    rollback = Rollback(cwd)
+    rollback.rollback(verbose=args.verbose)
 
 
 def checkout(args):
@@ -154,7 +154,8 @@ reset_parser.set_defaults(func=reset)
 rollback_parser = subparsers.add_parser('rollback', help='Command to rollback to last commit')
 rollback_parser.add_argument(
     '-v', '--verbose',
-    nargs='?', default=True,
+    action='store_true',
+    dest='verbose',
     help='rollback to last commit in verbose mode'
 )
 rollback_parser.set_defaults(func=rollback)
