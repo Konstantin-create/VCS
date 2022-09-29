@@ -12,7 +12,7 @@ subparsers = parser.add_subparsers(title='subcommands',
                                    help='description')
 
 
-def init_router(args):
+def init_router(args: argparse.Namespace):
     Init(
         cwd,
         base_branch=args.branch or 'main',
@@ -20,7 +20,7 @@ def init_router(args):
     )
 
 
-def add_router(args):
+def add_router(args: argparse.Namespace):
     add = Add(cwd)
     if args.list:
         add.tracked_files_list()
@@ -31,29 +31,36 @@ def add_router(args):
             add.add_tracked_file(file, bool(args.verbose), bool(args.force))
 
 
-def commit_router(args):
+def commit_router(args: argparse.Namespace):
     commit = Commit(cwd, args.text)
     commit.hard_commit() if args.hard else commit.commit()
 
 
-def reset_router(args):
+def reset_router(args: argparse.Namespace):
     reset = Reset(cwd)
     reset.last_commit(verbose=bool(args.verbose))
 
 
-def rollback_router(args):
+def rollback_router(args: argparse.Namespace):
     rollback = Rollback(cwd)
     rollback.rollback(verbose=args.verbose)
 
 
-def checkout_router(args):
+def checkout_router(args: argparse.Namespace):
     checkout = CheckOut(cwd)
     checkout.checkout(args.branch, create_new_branch=bool(args.new))
 
 
-def branch_router(args):
-    print('Branch')
-    print(args)
+def branch_router(args: argparse.Namespace):
+    branch = Branch(cwd)
+    if args.list:
+        branch.branches_list()
+        return
+    if args.new:
+        branch.create_new(args.new)
+        return
+    if args.delete:
+        branch.remove_branch(args.delete, bool(args.force))
 
 
 def merge_router(args):
@@ -180,16 +187,25 @@ checkout_parser.set_defaults(func=checkout_router)
 branch_parser = subparsers.add_parser('branch', help='Command to modify branches')
 branch_parser.add_argument(
     '-l', '--list',
-    nargs='?', default=True,
+    action='store_true',
+    dest='list',
     help='command to modify branches'
 )
 branch_parser.add_argument(
     '-n', '--new',
+    dest='new',
     help='create new branch'
 )
 branch_parser.add_argument(
     '-d', '--delete',
+    dest='delete',
     help='remove branch'
+)
+branch_parser.add_argument(
+    '-f', '--force',
+    dest='force',
+    action='store_true',
+    help='remove branch in a force mode'
 )
 branch_parser.set_defaults(func=branch_router)
 
